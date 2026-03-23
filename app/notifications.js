@@ -1,0 +1,143 @@
+import { useAuth } from "@/utils/auth/useAuth";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { ArrowLeft, Bell, Eye, Star } from "lucide-react-native";
+import { useEffect, useState } from "react";
+import {
+    ActivityIndicator,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+export default function NotificationsPage() {
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const { auth } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const headers = {};
+      if (auth?.jwt) headers.Authorization = `Bearer ${auth.jwt}`;
+      const res = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/athletes/notifications`, { headers });
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data.notifications || []);
+        setUnreadCount(data.unreadCount || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const markAsRead = async (notificationId = null) => {
+    try {
+      const headers = { "Content-Type": "application/json" };
+      if (auth?.jwt) headers.Authorization = `Bearer ${auth.jwt}`;
+      await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/athletes/notifications`, {
+        method: "PATCH", headers, body: JSON.stringify({ notificationId }),
+      });
+      fetchNotifications();
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
+
+  const getNotificationIcon = (type) => {
+    if (type === "profile_view") return <Eye size={20} color="#3B82F6" />;
+    if (type === "favorited") return <Star size={20} color="#F59E0B" fill="#F59E0B" />;
+    return <Bell size={20} color="#94A3B8" />;
+  };
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
+  };
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+        <StatusBar style="light" />
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color="#3B82F6" />
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+      <StatusBar style="light" />
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 16, borderBottomWidth: 1, borderBottomColor: "#1E293B" }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#1E293B", justifyContent: "center", alignItems: "center" }}>
+            <ArrowLeft size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginLeft: 16 }}>Notifications</Text>
+        </View>
+        {unreadCount > 0 && (
+          <TouchableOpacity onPress={() => markAsRead()} style={{ paddingHorizontal: 12, paddingVertical: 6, backgroundColor: "#1E293B", borderRadius: 8 }}>
+            <Text style={{ fontSize: 13, color: "#3B82F6", fontWeight: "600" }}>Mark All Read</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 16 }} showsVerticalScrollIndicator={false}>
+        {notifications.length === 0 ? (
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingVertical: 80 }}>
+            <View style={{ backgroundColor: "#1E293B", width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", marginBottom: 16 }}>
+              <Bell size={32} color="#94A3B8" />
+            </View>
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8 }}>No Notifications Yet</Text>
+            <Text style={{ fontSize: 14, color: "#94A3B8", textAlign: "center", paddingHorizontal: 32 }}>
+              You'll be notified when coaches view or favorite your profile
+            </Text>
+          </View>
+        ) : (
+          <View style={{ gap: 12 }}>
+            {notifications.map((notification) => (
+              <TouchableOpacity
+                key={notification.id}
+                onPress={() => { if (!notification.is_read) markAsRead(notification.id); }}
+                style={{ backgroundColor: notification.is_read ? "#1E293B" : "#1E3A5F", padding: 16, borderRadius: 12, borderLeftWidth: 3, borderLeftColor: notification.is_read ? "#334155" : "#3B82F6" }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
+                  <View style={{ backgroundColor: notification.is_read ? "#334155" : "#1E3A8A", width: 40, height: 40, borderRadius: 20, justifyContent: "center", alignItems: "center" }}>
+                    {getNotificationIcon(notification.notification_type)}
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 15, color: "#FFFFFF", lineHeight: 22, marginBottom: 6 }}>{notification.message}</Text>
+                    <Text style={{ fontSize: 13, color: "#94A3B8" }}>{formatTimestamp(notification.created_at)}</Text>
+                  </View>
+                  {!notification.is_read && (
+                    <View style={{ backgroundColor: "#3B82F6", width: 8, height: 8, borderRadius: 4, marginTop: 8 }} />
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+    </View>
+  );
+}
