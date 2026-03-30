@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SPORTS = [
   "Basketball", "Football", "Soccer", "Baseball", "Softball", "Volleyball",
@@ -195,7 +195,6 @@ function PositionPicker({ sport, selected, onSelect }) {
 
 export default function AthleteOnboarding() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -285,11 +284,11 @@ export default function AthleteOnboarding() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
       <StatusBar style="light" />
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: insets.bottom + 24 }}
+        contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -458,6 +457,6 @@ export default function AthleteOnboarding() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

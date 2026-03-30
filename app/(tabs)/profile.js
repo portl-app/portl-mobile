@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const STATUS_COLORS = {
   verified: { bg: "#065F46", color: "#6EE7B7" },
@@ -40,7 +40,6 @@ function Section({ title, children }) {
 }
 
 export default function ProfilePage() {
-  const insets = useSafeAreaInsets();
   const { signOut, auth } = useAuth();
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
@@ -88,12 +87,12 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+      <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
         <StatusBar style="light" />
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator size="large" color="#3B82F6" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -101,7 +100,7 @@ export default function ProfilePage() {
   const statusColor = STATUS_COLORS[status] || STATUS_COLORS.pending;
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
       <StatusBar style="light" />
       <ScrollView
         style={{ flex: 1 }}
@@ -243,6 +242,6 @@ export default function ProfilePage() {
           <Text style={{ color: "#FCA5A5", fontSize: 15, fontWeight: "bold" }}>Sign Out</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

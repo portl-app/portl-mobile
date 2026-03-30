@@ -10,10 +10,9 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function NotificationsPage() {
-  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { auth } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -76,17 +75,17 @@ export default function NotificationsPage() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
         <StatusBar style="light" />
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator size="large" color="#3B82F6" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
       <StatusBar style="light" />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 16, borderBottomWidth: 1, borderBottomColor: "#1E293B" }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -102,7 +101,7 @@ export default function NotificationsPage() {
         )}
       </View>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 16 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 16 }} showsVerticalScrollIndicator={false}>
         {notifications.length === 0 ? (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingVertical: 80 }}>
             <View style={{ backgroundColor: "#1E293B", width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", marginBottom: 16 }}>
@@ -138,6 +137,6 @@ export default function NotificationsPage() {
           </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

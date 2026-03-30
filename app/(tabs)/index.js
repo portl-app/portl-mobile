@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const STATUS_COLORS = {
   verified: { bg: "#065F46", color: "#6EE7B7" },
@@ -20,7 +20,6 @@ const STATUS_COLORS = {
 };
 
 export default function HomePage() {
-  const insets = useSafeAreaInsets();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
@@ -71,19 +70,19 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+      <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
         <StatusBar style="light" />
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator size="large" color="#3B82F6" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   const firstName = profile?.full_name?.split(" ")[0] || "there";
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
       <StatusBar style="light" />
       <ScrollView
         style={{ flex: 1 }}
@@ -110,7 +109,7 @@ export default function HomePage() {
           <CoachHome profile={profile} discover={discover} savedCount={savedCount} router={router} />
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

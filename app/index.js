@@ -3,14 +3,12 @@ import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   const router = useRouter();
   const { isReady, isAuthenticated, auth, signIn, signUp } = useAuth();
   const [loading, setLoading] = useState(true);
-  const insets = useSafeAreaInsets();
-
   useEffect(() => {
     const checkUserStatus = async () => {
       if (!isReady) return;
@@ -70,17 +68,17 @@ export default function Index() {
 
   if (!isReady || loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
         <StatusBar style="light" />
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator size="large" color="#3B82F6" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
       <StatusBar style="light" />
       <View style={{ flex: 1, paddingHorizontal: 24, justifyContent: "center" }}>
         <View style={{ alignItems: "center", marginBottom: 48 }}>
@@ -117,6 +115,6 @@ export default function Index() {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

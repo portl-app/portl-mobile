@@ -3,11 +3,10 @@ import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RoleSelection() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { auth } = useAuth();
@@ -41,7 +40,7 @@ export default function RoleSelection() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
       <StatusBar style="light" />
       <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 32 }}>
         <View style={{ alignItems: "center", marginBottom: 32 }}>
@@ -86,6 +85,6 @@ export default function RoleSelection() {
           </View>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

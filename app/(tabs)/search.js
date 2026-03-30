@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SPORTS = [
   "Basketball", "Football", "Soccer", "Baseball", "Softball", "Volleyball",
@@ -57,7 +57,6 @@ function SportPicker({ selected, onSelect, placeholder }) {
 }
 
 export default function SearchPage() {
-  const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
   const [results, setResults] = useState([]);
@@ -128,7 +127,7 @@ export default function SearchPage() {
   const updateCoachFilter = (key, value) => setCoachFilters((prev) => ({ ...prev, [key]: value }));
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
       <StatusBar style="light" />
 
       {/* Header */}
@@ -247,7 +246,7 @@ export default function SearchPage() {
           </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
