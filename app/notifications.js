@@ -1,7 +1,7 @@
 import { useAuth } from "@/utils/auth/useAuth";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { ArrowLeft, Bell, Eye, Star } from "lucide-react-native";
+import { ArrowLeft, Bell, Eye, Heart } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -16,17 +16,38 @@ export default function NotificationsPage() {
   const router = useRouter();
   const { auth } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    fetchNotifications();
+    fetchData();
   }, []);
 
-  const fetchNotifications = async () => {
+  const fetchData = async () => {
     try {
       const headers = {};
       if (auth?.jwt) headers.Authorization = `Bearer ${auth.jwt}`;
+
+      const roleRes = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/users/role`, { headers });
+      if (!roleRes.ok) return;
+      const { user } = await roleRes.json();
+      setUserRole(user.role);
+
+      if (user.role !== "athlete") return;
+
+      await fetchNotifications(headers);
+    } catch (error) {
+      console.error("Error loading notifications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchNotifications = async (existingHeaders) => {
+    try {
+      const headers = existingHeaders || {};
+      if (!existingHeaders && auth?.jwt) headers.Authorization = `Bearer ${auth.jwt}`;
       const res = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/athletes/notifications`, { headers });
       if (res.ok) {
         const data = await res.json();
@@ -35,8 +56,6 @@ export default function NotificationsPage() {
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -55,7 +74,7 @@ export default function NotificationsPage() {
 
   const getNotificationIcon = (type) => {
     if (type === "profile_view") return <Eye size={20} color="#3B82F6" />;
-    if (type === "favorited") return <Star size={20} color="#F59E0B" fill="#F59E0B" />;
+    if (type === "favorited") return <Heart size={20} color="#F43F5E" fill="#F43F5E" />;
     return <Bell size={20} color="#94A3B8" />;
   };
 
@@ -79,6 +98,31 @@ export default function NotificationsPage() {
         <StatusBar style="light" />
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ActivityIndicator size="large" color="#3B82F6" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (userRole === "coach") {
+    return (
+      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
+        <StatusBar style="light" />
+        <View style={{ flexDirection: "row", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#1E293B" }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#1E293B", justifyContent: "center", alignItems: "center" }}>
+            <ArrowLeft size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginLeft: 16 }}>Notifications</Text>
+        </View>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 32 }}>
+          <View style={{ backgroundColor: "#1E293B", width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", marginBottom: 16 }}>
+            <Bell size={32} color="#94A3B8" />
+          </View>
+          <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8, textAlign: "center" }}>
+            Not Available for Coaches
+          </Text>
+          <Text style={{ fontSize: 14, color: "#94A3B8", textAlign: "center", lineHeight: 22 }}>
+            Notifications are only available for athletes. Coaches can view athlete profiles in the Search tab.
+          </Text>
         </View>
       </SafeAreaView>
     );

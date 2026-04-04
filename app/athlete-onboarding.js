@@ -42,6 +42,7 @@ const SPORT_POSITIONS = {
 };
 
 const DIVISION_LEVELS = ["NCAA D1", "NCAA D2", "NCAA D3", "NAIA", "JUCO"];
+const ACADEMIC_STATUSES = ["Freshman", "Sophomore", "Junior", "Senior", "Graduate"];
 
 function getStatFields(sport, position) {
   if (!sport) return [];
@@ -135,7 +136,7 @@ function getStatFields(sport, position) {
   return [];
 }
 
-function SportPicker({ selected, onSelect }) {
+function Dropdown({ label, value, options, onSelect, placeholder }) {
   const [open, setOpen] = useState(false);
   return (
     <View>
@@ -143,55 +144,31 @@ function SportPicker({ selected, onSelect }) {
         onPress={() => setOpen(!open)}
         style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
       >
-        <Text style={{ color: selected ? "#FFFFFF" : "#64748B", fontSize: 16 }}>{selected || "Select sport..."}</Text>
+        <Text style={{ color: value ? "#FFFFFF" : "#64748B", fontSize: 16 }}>{value || placeholder}</Text>
         <Text style={{ color: "#64748B", fontSize: 14 }}>{open ? "▲" : "▼"}</Text>
       </TouchableOpacity>
       {open && (
-        <View style={{ backgroundColor: "#1E293B", borderRadius: 8, marginTop: 4, borderWidth: 1, borderColor: "#334155" }}>
-          {SPORTS.map((sport) => (
-            <TouchableOpacity
-              key={sport}
-              onPress={() => { onSelect(sport); setOpen(false); }}
-              style={{ padding: 14, borderBottomWidth: 1, borderBottomColor: "#0F172A", backgroundColor: selected === sport ? "#172554" : "transparent" }}
-            >
-              <Text style={{ color: selected === sport ? "#93C5FD" : "#E2E8F0", fontSize: 15 }}>{sport}</Text>
-            </TouchableOpacity>
-          ))}
+        <View style={{ backgroundColor: "#1E293B", borderRadius: 8, marginTop: 4, borderWidth: 1, borderColor: "#334155", maxHeight: 240 }}>
+          <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
+            {options.map((opt) => (
+              <TouchableOpacity
+                key={opt}
+                onPress={() => { onSelect(opt); setOpen(false); }}
+                style={{ padding: 14, borderBottomWidth: 1, borderBottomColor: "#0F172A", backgroundColor: value === opt ? "#172554" : "transparent" }}
+              >
+                <Text style={{ color: value === opt ? "#93C5FD" : "#E2E8F0", fontSize: 15 }}>{opt}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
       )}
     </View>
   );
 }
 
-function PositionPicker({ sport, selected, onSelect }) {
-  const [open, setOpen] = useState(false);
-  const positions = SPORT_POSITIONS[sport] || [];
-  if (positions.length === 0) return null;
-  return (
-    <View>
-      <TouchableOpacity
-        onPress={() => setOpen(!open)}
-        style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
-      >
-        <Text style={{ color: selected ? "#FFFFFF" : "#64748B", fontSize: 16 }}>{selected || "Select position..."}</Text>
-        <Text style={{ color: "#64748B", fontSize: 14 }}>{open ? "▲" : "▼"}</Text>
-      </TouchableOpacity>
-      {open && (
-        <View style={{ backgroundColor: "#1E293B", borderRadius: 8, marginTop: 4, borderWidth: 1, borderColor: "#334155" }}>
-          {positions.map((pos) => (
-            <TouchableOpacity
-              key={pos}
-              onPress={() => { onSelect(pos); setOpen(false); }}
-              style={{ padding: 14, borderBottomWidth: 1, borderBottomColor: "#0F172A", backgroundColor: selected === pos ? "#172554" : "transparent" }}
-            >
-              <Text style={{ color: selected === pos ? "#93C5FD" : "#E2E8F0", fontSize: 15 }}>{pos}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-    </View>
-  );
-}
+const INPUT = { backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 16 };
+const LABEL = { fontSize: 14, color: "#E2E8F0", marginBottom: 8 };
+const SECTION_TITLE = { fontSize: 16, fontWeight: "700", color: "#3B82F6", marginBottom: 4 };
 
 export default function AthleteOnboarding() {
   const router = useRouter();
@@ -202,11 +179,13 @@ export default function AthleteOnboarding() {
   const { auth } = useAuth();
 
   const [formData, setFormData] = useState({
-    full_name: "", sport: "", position: "", height: "", weight: "",
-    current_school: "", graduation_year: "", division_level: "",
+    full_name: "", gender: "", dob: "", hometown: "",
+    height: "", weight: "", current_school: "", graduation_year: "",
+    optional_contact_email: "",
+    sport: "", position: "", secondary_position: "", division_level: "",
     years_of_eligibility: "", achievements: "", video_link: "",
-    optional_contact_email: "", stats_link: "", school_athletics_link: "",
-    gender: "",
+    academic_status: "", gpa: "", major: "", minor: "", academic_honors: "",
+    stats_link: "", school_athletics_link: "",
   });
 
   const [statValues, setStatValues] = useState({});
@@ -217,6 +196,7 @@ export default function AthleteOnboarding() {
   const updateStat = (key, value) => setStatValues((prev) => ({ ...prev, [key]: value }));
 
   const statFields = getStatFields(formData.sport, formData.position);
+  const positions = SPORT_POSITIONS[formData.sport] || [];
 
   const pickDocument = async () => {
     try {
@@ -237,18 +217,18 @@ export default function AthleteOnboarding() {
 
     if (step === 1) {
       if (!formData.full_name || !formData.current_school || !formData.graduation_year) {
-        setError("Please fill in all required fields");
+        setError("Please fill in your name, school, and graduation year");
         return;
       }
       setStep(2);
     } else if (step === 2) {
       if (!formData.sport || !formData.position || !formData.division_level) {
-        setError("Please select sport, position, and division level");
+        setError("Please select your sport, position, and division level");
         return;
       }
       setStep(3);
     } else if (step === 3) {
-      if (!document) { setError("Please upload verification document"); return; }
+      if (!document) { setError("Please upload a verification document"); return; }
       if (!attestationAccepted) { setError("You must confirm you are in the transfer portal"); return; }
 
       setLoading(true);
@@ -292,147 +272,373 @@ export default function AthleteOnboarding() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        {/* Header + progress */}
         <View style={{ marginBottom: 32 }}>
-          <Text style={{ fontSize: 24, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8 }}>Athlete Profile</Text>
-          <Text style={{ fontSize: 14, color: "#94A3B8" }}>Step {step} of 3</Text>
-          <View style={{ flexDirection: "row", gap: 6, marginTop: 12 }}>
+          <Text style={{ fontSize: 24, fontWeight: "bold", color: "#FFFFFF", marginBottom: 4 }}>Athlete Profile</Text>
+          <Text style={{ fontSize: 14, color: "#94A3B8", marginBottom: 12 }}>
+            Step {step} of 3 — {step === 1 ? "Personal Information" : step === 2 ? "Athletic Information" : "Academic & Verification"}
+          </Text>
+          <View style={{ flexDirection: "row", gap: 6 }}>
             {[1, 2, 3].map((s) => (
               <View key={s} style={{ flex: 1, height: 3, borderRadius: 2, backgroundColor: s <= step ? "#3B82F6" : "#1E293B" }} />
             ))}
           </View>
         </View>
 
-        {/* Step 1: Personal Information */}
+        {/* ── Step 1: Personal Information ── */}
         {step === 1 && (
           <View style={{ gap: 20 }}>
-            <Text style={{ fontSize: 16, fontWeight: "700", color: "#3B82F6", marginBottom: 4 }}>Personal Information</Text>
+            <Text style={SECTION_TITLE}>Personal Information</Text>
+
             <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Full Name *</Text>
-              <TextInput value={formData.full_name} onChangeText={(v) => updateField("full_name", v)} placeholder="Enter your full name" placeholderTextColor="#64748B" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 16 }} />
+              <Text style={LABEL}>Full Name *</Text>
+              <TextInput
+                value={formData.full_name}
+                onChangeText={(v) => updateField("full_name", v)}
+                placeholder="Enter your full name"
+                placeholderTextColor="#64748B"
+                style={INPUT}
+              />
             </View>
+
             <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Current School *</Text>
-              <TextInput value={formData.current_school} onChangeText={(v) => updateField("current_school", v)} placeholder="Enter your current school" placeholderTextColor="#64748B" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 16 }} />
-            </View>
-            <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Graduation Year *</Text>
-              <TextInput value={formData.graduation_year} onChangeText={(v) => updateField("graduation_year", v)} placeholder="e.g. 2026" placeholderTextColor="#64748B" keyboardType="numeric" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 16 }} />
-            </View>
-            <View style={{ flexDirection: "row", gap: 12 }}>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Height</Text>
-                <TextInput value={formData.height} onChangeText={(v) => updateField("height", v)} placeholder="6ft 2in" placeholderTextColor="#64748B" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 16 }} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Weight</Text>
-                <TextInput value={formData.weight} onChangeText={(v) => updateField("weight", v)} placeholder="185 lbs" placeholderTextColor="#64748B" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 16 }} />
-              </View>
-            </View>
-            <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Gender</Text>
+              <Text style={LABEL}>Gender</Text>
               <View style={{ flexDirection: "row", gap: 8 }}>
                 {["Male", "Female"].map((g) => (
-                  <TouchableOpacity key={g} onPress={() => updateField("gender", g)} style={{ flex: 1, backgroundColor: formData.gender === g ? "#3B82F6" : "#1E293B", padding: 14, borderRadius: 8, alignItems: "center", borderWidth: 1, borderColor: formData.gender === g ? "#3B82F6" : "#334155" }}>
+                  <TouchableOpacity
+                    key={g}
+                    onPress={() => updateField("gender", g)}
+                    style={{ flex: 1, backgroundColor: formData.gender === g ? "#3B82F6" : "#1E293B", padding: 14, borderRadius: 8, alignItems: "center", borderWidth: 1, borderColor: formData.gender === g ? "#3B82F6" : "#334155" }}
+                  >
                     <Text style={{ color: "#FFFFFF", fontSize: 15, fontWeight: formData.gender === g ? "700" : "400" }}>{g}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
+
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Date of Birth</Text>
+                <TextInput
+                  value={formData.dob}
+                  onChangeText={(v) => updateField("dob", v)}
+                  placeholder="MM/DD/YYYY"
+                  placeholderTextColor="#64748B"
+                  keyboardType="numbers-and-punctuation"
+                  style={INPUT}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Hometown</Text>
+                <TextInput
+                  value={formData.hometown}
+                  onChangeText={(v) => updateField("hometown", v)}
+                  placeholder="City, State"
+                  placeholderTextColor="#64748B"
+                  style={INPUT}
+                />
+              </View>
+            </View>
+
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Height</Text>
+                <TextInput
+                  value={formData.height}
+                  onChangeText={(v) => updateField("height", v)}
+                  placeholder="6ft 2in"
+                  placeholderTextColor="#64748B"
+                  style={INPUT}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Weight</Text>
+                <TextInput
+                  value={formData.weight}
+                  onChangeText={(v) => updateField("weight", v)}
+                  placeholder="185 lbs"
+                  placeholderTextColor="#64748B"
+                  style={INPUT}
+                />
+              </View>
+            </View>
+
+            <View>
+              <Text style={LABEL}>Current School *</Text>
+              <TextInput
+                value={formData.current_school}
+                onChangeText={(v) => updateField("current_school", v)}
+                placeholder="Enter your current school"
+                placeholderTextColor="#64748B"
+                style={INPUT}
+              />
+            </View>
+
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Graduation Year *</Text>
+                <TextInput
+                  value={formData.graduation_year}
+                  onChangeText={(v) => updateField("graduation_year", v)}
+                  placeholder="2026"
+                  placeholderTextColor="#64748B"
+                  keyboardType="numeric"
+                  style={INPUT}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Years of Eligibility</Text>
+                <TextInput
+                  value={formData.years_of_eligibility}
+                  onChangeText={(v) => updateField("years_of_eligibility", v)}
+                  placeholder="e.g. 2"
+                  placeholderTextColor="#64748B"
+                  keyboardType="numeric"
+                  style={INPUT}
+                />
+              </View>
+            </View>
+
+            <View>
+              <Text style={LABEL}>Contact Email (Optional)</Text>
+              <TextInput
+                value={formData.optional_contact_email}
+                onChangeText={(v) => updateField("optional_contact_email", v)}
+                placeholder="your.email@example.com"
+                placeholderTextColor="#64748B"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={INPUT}
+              />
+            </View>
           </View>
         )}
 
-        {/* Step 2: Athletic Information */}
+        {/* ── Step 2: Athletic Information ── */}
         {step === 2 && (
           <View style={{ gap: 20 }}>
-            <Text style={{ fontSize: 16, fontWeight: "700", color: "#3B82F6", marginBottom: 4 }}>Athletic Information</Text>
+            <Text style={SECTION_TITLE}>Athletic Information</Text>
+
             <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Sport *</Text>
-              <SportPicker selected={formData.sport} onSelect={(v) => { updateField("sport", v); updateField("position", ""); setStatValues({}); }} />
+              <Text style={LABEL}>Sport *</Text>
+              <Dropdown
+                value={formData.sport}
+                options={SPORTS}
+                placeholder="Select sport..."
+                onSelect={(v) => { updateField("sport", v); updateField("position", ""); updateField("secondary_position", ""); setStatValues({}); }}
+              />
             </View>
-            {formData.sport && (
+
+            {positions.length > 0 && (
               <View>
-                <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Position *</Text>
-                <PositionPicker sport={formData.sport} selected={formData.position} onSelect={(v) => { updateField("position", v); setStatValues({}); }} />
+                <Text style={LABEL}>Primary Position *</Text>
+                <Dropdown
+                  value={formData.position}
+                  options={positions}
+                  placeholder="Select position..."
+                  onSelect={(v) => { updateField("position", v); setStatValues({}); }}
+                />
               </View>
             )}
+
+            {positions.length > 0 && (
+              <View>
+                <Text style={LABEL}>Secondary Position (Optional)</Text>
+                <Dropdown
+                  value={formData.secondary_position}
+                  options={["None", ...positions.filter((p) => p !== formData.position)]}
+                  placeholder="Select secondary position..."
+                  onSelect={(v) => updateField("secondary_position", v === "None" ? "" : v)}
+                />
+              </View>
+            )}
+
             <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Division Level *</Text>
+              <Text style={LABEL}>Division Level *</Text>
               <View style={{ gap: 8 }}>
                 {DIVISION_LEVELS.map((level) => (
-                  <TouchableOpacity key={level} onPress={() => updateField("division_level", level)} style={{ backgroundColor: formData.division_level === level ? "#172554" : "#1E293B", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: formData.division_level === level ? "#3B82F6" : "#334155" }}>
+                  <TouchableOpacity
+                    key={level}
+                    onPress={() => updateField("division_level", level)}
+                    style={{ backgroundColor: formData.division_level === level ? "#172554" : "#1E293B", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: formData.division_level === level ? "#3B82F6" : "#334155" }}
+                  >
                     <Text style={{ color: formData.division_level === level ? "#93C5FD" : "#E2E8F0", fontSize: 15, fontWeight: formData.division_level === level ? "700" : "400" }}>{level}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
-            <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Years of Eligibility Remaining</Text>
-              <TextInput value={formData.years_of_eligibility} onChangeText={(v) => updateField("years_of_eligibility", v)} placeholder="e.g. 2" placeholderTextColor="#64748B" keyboardType="numeric" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 16 }} />
-            </View>
 
             {statFields.length > 0 && (
               <View style={{ gap: 12 }}>
-                <Text style={{ fontSize: 14, color: "#94A3B8", fontWeight: "600" }}>Stats ({formData.sport})</Text>
+                <Text style={{ fontSize: 14, color: "#94A3B8", fontWeight: "600" }}>
+                  {formData.sport} Stats
+                </Text>
                 {statFields.map(({ label, fieldKey }) => (
                   <View key={fieldKey}>
                     <Text style={{ fontSize: 13, color: "#E2E8F0", marginBottom: 6 }}>{label}</Text>
-                    <TextInput value={statValues[fieldKey] || ""} onChangeText={(v) => updateStat(fieldKey, v)} placeholder="—" placeholderTextColor="#475569" keyboardType="decimal-pad" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 14, borderRadius: 8, fontSize: 15 }} />
+                    <TextInput
+                      value={statValues[fieldKey] || ""}
+                      onChangeText={(v) => updateStat(fieldKey, v)}
+                      placeholder="—"
+                      placeholderTextColor="#475569"
+                      keyboardType="decimal-pad"
+                      style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 14, borderRadius: 8, fontSize: 15 }}
+                    />
                   </View>
                 ))}
               </View>
             )}
 
             <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Achievements</Text>
-              <TextInput value={formData.achievements} onChangeText={(v) => updateField("achievements", v)} placeholder="Awards, honors, accomplishments..." placeholderTextColor="#64748B" multiline numberOfLines={3} style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 15, height: 90, textAlignVertical: "top" }} />
+              <Text style={LABEL}>Achievements</Text>
+              <TextInput
+                value={formData.achievements}
+                onChangeText={(v) => updateField("achievements", v)}
+                placeholder="Awards, honors, accomplishments..."
+                placeholderTextColor="#64748B"
+                multiline
+                numberOfLines={3}
+                style={{ ...INPUT, height: 90, textAlignVertical: "top" }}
+              />
             </View>
+
             <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Highlight Video URL</Text>
-              <TextInput value={formData.video_link} onChangeText={(v) => updateField("video_link", v)} placeholder="YouTube or Hudl link" placeholderTextColor="#64748B" autoCapitalize="none" keyboardType="url" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 15 }} />
-            </View>
-            <View>
-              <Text style={{ fontSize: 14, color: "#E2E8F0", marginBottom: 8 }}>Contact Email (Optional)</Text>
-              <TextInput value={formData.optional_contact_email} onChangeText={(v) => updateField("optional_contact_email", v)} placeholder="your.email@example.com" placeholderTextColor="#64748B" autoCapitalize="none" keyboardType="email-address" style={{ backgroundColor: "#1E293B", color: "#FFFFFF", padding: 16, borderRadius: 8, fontSize: 15 }} />
+              <Text style={LABEL}>Highlight Video URL</Text>
+              <TextInput
+                value={formData.video_link}
+                onChangeText={(v) => updateField("video_link", v)}
+                placeholder="YouTube or Hudl link"
+                placeholderTextColor="#64748B"
+                autoCapitalize="none"
+                keyboardType="url"
+                style={INPUT}
+              />
             </View>
           </View>
         )}
 
-        {/* Step 3: Stats Verification + Transfer Portal Docs */}
+        {/* ── Step 3: Academic Information + Verification ── */}
         {step === 3 && (
           <View style={{ gap: 20 }}>
-            <Text style={{ fontSize: 16, fontWeight: "700", color: "#3B82F6", marginBottom: 4 }}>Stats Verification</Text>
-            <View style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 8, borderWidth: 1, borderColor: "#334155" }}>
-              <Text style={{ fontSize: 13, color: "#94A3B8", lineHeight: 20, marginBottom: 12 }}>
-                Provide links to your official stats page and school athletics profile so coaches can verify your performance.
-              </Text>
-              <View style={{ gap: 12 }}>
-                <View>
-                  <Text style={{ fontSize: 13, color: "#E2E8F0", marginBottom: 6 }}>Official Stats Link</Text>
-                  <TextInput value={formData.stats_link} onChangeText={(v) => updateField("stats_link", v)} placeholder="e.g. ESPN, MaxPreps, school stats page" placeholderTextColor="#64748B" autoCapitalize="none" keyboardType="url" style={{ backgroundColor: "#0F172A", color: "#FFFFFF", padding: 14, borderRadius: 8, fontSize: 14 }} />
-                </View>
-                <View>
-                  <Text style={{ fontSize: 13, color: "#E2E8F0", marginBottom: 6 }}>School Athletics Profile Link</Text>
-                  <TextInput value={formData.school_athletics_link} onChangeText={(v) => updateField("school_athletics_link", v)} placeholder="Your school's athletics bio page" placeholderTextColor="#64748B" autoCapitalize="none" keyboardType="url" style={{ backgroundColor: "#0F172A", color: "#FFFFFF", padding: 14, borderRadius: 8, fontSize: 14 }} />
-                </View>
+            <Text style={SECTION_TITLE}>Academic Information</Text>
+
+            <View>
+              <Text style={LABEL}>Academic Status</Text>
+              <Dropdown
+                value={formData.academic_status}
+                options={ACADEMIC_STATUSES}
+                placeholder="Select status..."
+                onSelect={(v) => updateField("academic_status", v)}
+              />
+            </View>
+
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>GPA</Text>
+                <TextInput
+                  value={formData.gpa}
+                  onChangeText={(v) => updateField("gpa", v)}
+                  placeholder="e.g. 3.5"
+                  placeholderTextColor="#64748B"
+                  keyboardType="decimal-pad"
+                  style={INPUT}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Major</Text>
+                <TextInput
+                  value={formData.major}
+                  onChangeText={(v) => updateField("major", v)}
+                  placeholder="e.g. Business"
+                  placeholderTextColor="#64748B"
+                  style={INPUT}
+                />
               </View>
             </View>
 
-            <Text style={{ fontSize: 16, fontWeight: "700", color: "#3B82F6", marginTop: 8 }}>Transfer Portal Verification</Text>
-            <View style={{ backgroundColor: "#1C1708", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: "#78350F" }}>
-              <Text style={{ fontSize: 13, color: "#FCD34D", lineHeight: 20 }}>Upload proof that you are currently in the NCAA transfer portal</Text>
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Minor</Text>
+                <TextInput
+                  value={formData.minor}
+                  onChangeText={(v) => updateField("minor", v)}
+                  placeholder="e.g. Finance"
+                  placeholderTextColor="#64748B"
+                  style={INPUT}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={LABEL}>Academic Honors</Text>
+                <TextInput
+                  value={formData.academic_honors}
+                  onChangeText={(v) => updateField("academic_honors", v)}
+                  placeholder="e.g. Dean's List"
+                  placeholderTextColor="#64748B"
+                  style={INPUT}
+                />
+              </View>
             </View>
 
-            <TouchableOpacity onPress={pickDocument} disabled={uploading} style={{ backgroundColor: "#1E293B", padding: 20, borderRadius: 8, borderWidth: 2, borderStyle: "dashed", borderColor: document ? "#22C55E" : "#3B82F6", alignItems: "center" }}>
-              <Text style={{ fontSize: 16, color: document ? "#22C55E" : "#3B82F6", marginBottom: 4 }}>{document ? "✓ Document Selected" : "📄 Upload Document"}</Text>
+            <Text style={[SECTION_TITLE, { marginTop: 8 }]}>Stats Verification</Text>
+            <View style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 8, borderWidth: 1, borderColor: "#334155", gap: 12 }}>
+              <Text style={{ fontSize: 13, color: "#94A3B8", lineHeight: 20 }}>
+                Provide links to your official stats page and school athletics profile so coaches can verify your performance.
+              </Text>
+              <View>
+                <Text style={{ fontSize: 13, color: "#E2E8F0", marginBottom: 6 }}>Official Stats Link</Text>
+                <TextInput
+                  value={formData.stats_link}
+                  onChangeText={(v) => updateField("stats_link", v)}
+                  placeholder="ESPN, MaxPreps, school stats page..."
+                  placeholderTextColor="#64748B"
+                  autoCapitalize="none"
+                  keyboardType="url"
+                  style={{ backgroundColor: "#0F172A", color: "#FFFFFF", padding: 14, borderRadius: 8, fontSize: 14 }}
+                />
+              </View>
+              <View>
+                <Text style={{ fontSize: 13, color: "#E2E8F0", marginBottom: 6 }}>School Athletics Profile Link</Text>
+                <TextInput
+                  value={formData.school_athletics_link}
+                  onChangeText={(v) => updateField("school_athletics_link", v)}
+                  placeholder="Your school's athletics bio page"
+                  placeholderTextColor="#64748B"
+                  autoCapitalize="none"
+                  keyboardType="url"
+                  style={{ backgroundColor: "#0F172A", color: "#FFFFFF", padding: 14, borderRadius: 8, fontSize: 14 }}
+                />
+              </View>
+            </View>
+
+            <Text style={[SECTION_TITLE, { marginTop: 8 }]}>Transfer Portal Verification</Text>
+            <View style={{ backgroundColor: "#1C1708", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: "#78350F" }}>
+              <Text style={{ fontSize: 13, color: "#FCD34D", lineHeight: 20 }}>
+                Upload proof that you are currently in the NCAA transfer portal (PDF, JPG, or PNG)
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={pickDocument}
+              disabled={uploading}
+              style={{ backgroundColor: "#1E293B", padding: 20, borderRadius: 8, borderWidth: 2, borderStyle: "dashed", borderColor: document ? "#22C55E" : "#3B82F6", alignItems: "center" }}
+            >
+              <Text style={{ fontSize: 16, color: document ? "#22C55E" : "#3B82F6", marginBottom: 4 }}>
+                {document ? "✓ Document Selected" : "📄 Upload Document"}
+              </Text>
               {document && <Text style={{ fontSize: 13, color: "#94A3B8", marginTop: 6 }}>{document.name}</Text>}
               <Text style={{ fontSize: 12, color: "#64748B", marginTop: 6 }}>PDF, JPG, or PNG accepted</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setAttestationAccepted(!attestationAccepted)} style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
+            <TouchableOpacity
+              onPress={() => setAttestationAccepted(!attestationAccepted)}
+              style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}
+            >
               <View style={{ width: 24, height: 24, borderRadius: 4, borderWidth: 2, borderColor: attestationAccepted ? "#3B82F6" : "#334155", backgroundColor: attestationAccepted ? "#3B82F6" : "transparent", justifyContent: "center", alignItems: "center", marginTop: 1 }}>
                 {attestationAccepted && <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "bold" }}>✓</Text>}
               </View>
-              <Text style={{ flex: 1, fontSize: 14, color: "#E2E8F0", lineHeight: 22 }}>I confirm that I am currently in the NCAA transfer portal</Text>
+              <Text style={{ flex: 1, fontSize: 14, color: "#E2E8F0", lineHeight: 22 }}>
+                I confirm that I am currently in the NCAA transfer portal
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -445,11 +651,19 @@ export default function AthleteOnboarding() {
 
         <View style={{ marginTop: 32, gap: 12 }}>
           {step > 1 && (
-            <TouchableOpacity onPress={() => setStep(step - 1)} disabled={loading} style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 8, alignItems: "center", borderWidth: 1, borderColor: "#334155" }}>
+            <TouchableOpacity
+              onPress={() => { setError(null); setStep(step - 1); }}
+              disabled={loading}
+              style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 8, alignItems: "center", borderWidth: 1, borderColor: "#334155" }}
+            >
               <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "bold" }}>Back</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={handleNext} disabled={loading || uploading} style={{ backgroundColor: "#3B82F6", padding: 16, borderRadius: 8, alignItems: "center", opacity: loading || uploading ? 0.5 : 1 }}>
+          <TouchableOpacity
+            onPress={handleNext}
+            disabled={loading || uploading}
+            style={{ backgroundColor: "#3B82F6", padding: 16, borderRadius: 8, alignItems: "center", opacity: loading || uploading ? 0.5 : 1 }}
+          >
             {loading || uploading
               ? <ActivityIndicator color="#FFFFFF" />
               : <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "bold" }}>{step === 3 ? "Submit for Review" : "Continue"}</Text>
