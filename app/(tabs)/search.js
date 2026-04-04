@@ -1,12 +1,14 @@
 import { useAuth } from "@/utils/auth/useAuth";
 import { StatusBar } from "expo-status-bar";
-import { Filter, Search as SearchIcon } from "lucide-react-native";
+import { Filter, Search as SearchIcon, X } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Linking,
+  Modal,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -19,6 +21,153 @@ const SPORTS = [
 ];
 
 const DIVISION_LEVELS = ["NCAA D1", "NCAA D2", "NCAA D3", "NAIA", "JUCO"];
+
+function getCoachTemplates(athlete, coachProfile) {
+  const coachName = coachProfile?.full_name || "Coach";
+  const school = coachProfile?.school || "our program";
+  const sport = coachProfile?.sport || "your sport";
+  const athleteName = athlete?.full_name || "there";
+  return [
+    {
+      label: "Initial Interest",
+      subject: `Recruiting Interest from ${school}`,
+      body: `Hi ${athleteName},\n\nMy name is ${coachName} and I am the ${sport} coach at ${school}. I came across your profile and am very impressed with your athletic background.\n\nI would love to learn more about you and discuss how you might fit into our program. Please feel free to reach out at your convenience.\n\nBest regards,\n${coachName}\n${school}`,
+    },
+    {
+      label: "Recruiting Visit",
+      subject: `Official Visit Invitation – ${school}`,
+      body: `Hi ${athleteName},\n\nI hope this message finds you well. As the ${sport} coach at ${school}, I would like to invite you for an official recruiting visit to our campus.\n\nThis would give you a chance to see our facilities, meet our team, and get a feel for the program. Please let me know your availability and we will work around your schedule.\n\nLooking forward to hearing from you,\n${coachName}\n${school}`,
+    },
+    {
+      label: "Scholarship Interest",
+      subject: `Scholarship Opportunity – ${school}`,
+      body: `Hi ${athleteName},\n\nMy name is ${coachName}, ${sport} coach at ${school}. After reviewing your profile I wanted to reach out regarding potential scholarship opportunities within our program.\n\nWe have a genuine interest in you and would like to discuss what we have to offer. Please reply or give me a call at your earliest convenience.\n\nSincerely,\n${coachName}\n${school}`,
+    },
+  ];
+}
+
+function getAthleteTemplates(coach, athleteProfile) {
+  const athleteName = athleteProfile?.full_name || "a prospective transfer";
+  const position = athleteProfile?.position || "my position";
+  const sport = athleteProfile?.sport || "your sport";
+  const coachName = coach?.full_name || "Coach";
+  const school = coach?.school || "your program";
+  return [
+    {
+      label: "Express Interest",
+      subject: `Transfer Interest – ${athleteName}`,
+      body: `Dear ${coachName},\n\nMy name is ${athleteName} and I am currently exploring transfer opportunities in ${sport}. I came across ${school} and am very impressed by your program.\n\nI play ${position} and believe my skills and experience could be a great fit. I would love the opportunity to speak with you about joining your team.\n\nThank you for your time,\n${athleteName}`,
+    },
+    {
+      label: "Follow Up",
+      subject: `Follow Up – ${athleteName}`,
+      body: `Dear ${coachName},\n\nI wanted to follow up on my previous message regarding transfer interest in your ${sport} program at ${school}.\n\nI remain very excited about the possibility of joining your team and would appreciate any update you may have. Please do not hesitate to reach out if you need any additional information from me.\n\nBest regards,\n${athleteName}`,
+    },
+  ];
+}
+
+function EmailTemplateModal({ visible, onClose, templates, toEmail, toName }) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [body, setBody] = useState("");
+  const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    if (visible && templates?.length) {
+      setSelectedIndex(0);
+      setBody(templates[0].body);
+      setEditing(false);
+    }
+  }, [visible]);
+
+  useEffect(() => {
+    if (templates?.length) setBody(templates[selectedIndex].body);
+    setEditing(false);
+  }, [selectedIndex]);
+
+  const handleSend = () => {
+    const subject = encodeURIComponent(templates[selectedIndex].subject);
+    const encodedBody = encodeURIComponent(body);
+    Linking.openURL(`mailto:${toEmail}?subject=${subject}&body=${encodedBody}`);
+    onClose();
+  };
+
+  if (!templates?.length) return null;
+  const current = templates[selectedIndex];
+
+  return (
+    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+      <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.6)", justifyContent: "flex-end" }}>
+        <View style={{ backgroundColor: "#1E293B", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20, maxHeight: "90%" }}>
+          {/* Header */}
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF" }}>Email Templates</Text>
+            <TouchableOpacity onPress={onClose} style={{ backgroundColor: "#334155", borderRadius: 16, padding: 6 }}>
+              <X size={18} color="#94A3B8" />
+            </TouchableOpacity>
+          </View>
+
+          {/* To */}
+          <View style={{ backgroundColor: "#0F172A", borderRadius: 8, padding: 10, marginBottom: 12 }}>
+            <Text style={{ fontSize: 12, color: "#64748B" }}>To: <Text style={{ color: "#E2E8F0" }}>{toName} — {toEmail}</Text></Text>
+          </View>
+
+          {/* Template tabs */}
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 12 }}>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              {templates.map((t, i) => (
+                <TouchableOpacity
+                  key={i}
+                  onPress={() => setSelectedIndex(i)}
+                  style={{ paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, backgroundColor: selectedIndex === i ? "#3B82F6" : "#0F172A", borderWidth: 1, borderColor: selectedIndex === i ? "#3B82F6" : "#334155" }}
+                >
+                  <Text style={{ color: selectedIndex === i ? "#FFFFFF" : "#94A3B8", fontSize: 13, fontWeight: "600" }}>{t.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+
+          {/* Subject */}
+          <View style={{ backgroundColor: "#0F172A", borderRadius: 8, padding: 10, marginBottom: 8 }}>
+            <Text style={{ fontSize: 12, color: "#64748B", marginBottom: 2 }}>Subject</Text>
+            <Text style={{ fontSize: 13, color: "#E2E8F0" }}>{current.subject}</Text>
+          </View>
+
+          {/* Body */}
+          <View style={{ backgroundColor: "#0F172A", borderRadius: 8, padding: 10, marginBottom: 16 }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+              <Text style={{ fontSize: 12, color: "#64748B" }}>Message</Text>
+              <TouchableOpacity onPress={() => setEditing(!editing)}>
+                <Text style={{ fontSize: 12, color: "#3B82F6", fontWeight: "600" }}>{editing ? "Done" : "Edit"}</Text>
+              </TouchableOpacity>
+            </View>
+            {editing ? (
+              <TextInput
+                value={body}
+                onChangeText={setBody}
+                multiline
+                style={{ color: "#E2E8F0", fontSize: 13, lineHeight: 20, minHeight: 140, textAlignVertical: "top" }}
+              />
+            ) : (
+              <ScrollView style={{ maxHeight: 160 }}>
+                <Text style={{ color: "#E2E8F0", fontSize: 13, lineHeight: 20 }}>{body}</Text>
+              </ScrollView>
+            )}
+          </View>
+
+          {/* Actions */}
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <TouchableOpacity onPress={onClose} style={{ flex: 1, backgroundColor: "#334155", padding: 14, borderRadius: 10, alignItems: "center" }}>
+              <Text style={{ color: "#94A3B8", fontWeight: "600" }}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSend} style={{ flex: 2, backgroundColor: "#3B82F6", padding: 14, borderRadius: 10, alignItems: "center" }}>
+              <Text style={{ color: "#FFFFFF", fontWeight: "bold" }}>Open in Email Client →</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
 
 function SportPicker({ selected, onSelect, placeholder }) {
   const [open, setOpen] = useState(false);
@@ -59,8 +208,10 @@ function SportPicker({ selected, onSelect, placeholder }) {
 export default function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
+  const [ownProfile, setOwnProfile] = useState(null);
   const [results, setResults] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [emailTarget, setEmailTarget] = useState(null); // { email, name, templates }
   const { auth } = useAuth();
 
   const [athleteFilters, setAthleteFilters] = useState({
@@ -84,9 +235,18 @@ export default function SearchPage() {
       const headers = {};
       if (auth?.jwt) headers.Authorization = `Bearer ${auth.jwt}`;
       const roleRes = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/users/role`, { headers });
-      if (roleRes.ok) {
-        const { user } = await roleRes.json();
-        setUserRole(user.role);
+      if (!roleRes.ok) return;
+      const { user } = await roleRes.json();
+      setUserRole(user.role);
+
+      // Fetch own profile for template placeholders
+      const profileEndpoint = user.role === "coach"
+        ? `${process.env.EXPO_PUBLIC_BASE_URL}/api/coaches/profile`
+        : `${process.env.EXPO_PUBLIC_BASE_URL}/api/athletes/profile`;
+      const profileRes = await fetch(profileEndpoint, { headers });
+      if (profileRes.ok) {
+        const { profile } = await profileRes.json();
+        setOwnProfile(profile);
       }
     } catch (err) {
       console.error("Error fetching user role:", err);
@@ -126,9 +286,35 @@ export default function SearchPage() {
   const updateAthleteFilter = (key, value) => setAthleteFilters((prev) => ({ ...prev, [key]: value }));
   const updateCoachFilter = (key, value) => setCoachFilters((prev) => ({ ...prev, [key]: value }));
 
+  const handleContactAthlete = (athlete) => {
+    if (!athlete.optional_contact_email) return;
+    setEmailTarget({
+      email: athlete.optional_contact_email,
+      name: athlete.full_name,
+      templates: getCoachTemplates(athlete, ownProfile),
+    });
+  };
+
+  const handleContactCoach = (coach) => {
+    if (!coach.email) return;
+    setEmailTarget({
+      email: coach.email,
+      name: coach.full_name,
+      templates: getAthleteTemplates(coach, ownProfile),
+    });
+  };
+
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
       <StatusBar style="light" />
+
+      <EmailTemplateModal
+        visible={!!emailTarget}
+        onClose={() => setEmailTarget(null)}
+        templates={emailTarget?.templates}
+        toEmail={emailTarget?.email}
+        toName={emailTarget?.name}
+      />
 
       {/* Header */}
       <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: "#334155" }}>
@@ -238,9 +424,9 @@ export default function SearchPage() {
           <View style={{ gap: 10 }}>
             {results.map((item) =>
               userRole === "coach" ? (
-                <AthleteResultCard key={item.id} athlete={item} />
+                <AthleteResultCard key={item.id} athlete={item} onContact={handleContactAthlete} />
               ) : (
-                <CoachResultCard key={item.user_id} coach={item} />
+                <CoachResultCard key={item.user_id} coach={item} onContact={handleContactCoach} />
               )
             )}
           </View>
@@ -250,7 +436,7 @@ export default function SearchPage() {
   );
 }
 
-function AthleteResultCard({ athlete }) {
+function AthleteResultCard({ athlete, onContact }) {
   return (
     <View style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#334155" }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
@@ -308,10 +494,10 @@ function AthleteResultCard({ athlete }) {
         )}
         {athlete.optional_contact_email && (
           <TouchableOpacity
-            onPress={() => Linking.openURL(`mailto:${athlete.optional_contact_email}`)}
+            onPress={() => onContact(athlete)}
             style={{ flex: 1, backgroundColor: "#1D4ED8", padding: 10, borderRadius: 8, alignItems: "center" }}
           >
-            <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: "600" }}>Contact</Text>
+            <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: "600" }}>✉ Contact</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -319,7 +505,7 @@ function AthleteResultCard({ athlete }) {
   );
 }
 
-function CoachResultCard({ coach }) {
+function CoachResultCard({ coach, onContact }) {
   return (
     <View style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#334155" }}>
       <Text style={{ fontSize: 16, fontWeight: "bold", color: "#E2E8F0", marginBottom: 2 }}>{coach.full_name}</Text>
@@ -338,10 +524,10 @@ function CoachResultCard({ coach }) {
       </View>
       {coach.email && (
         <TouchableOpacity
-          onPress={() => Linking.openURL(`mailto:${coach.email}`)}
+          onPress={() => onContact(coach)}
           style={{ backgroundColor: "#3B82F6", padding: 12, borderRadius: 8, alignItems: "center" }}
         >
-          <Text style={{ color: "#FFFFFF", fontSize: 13, fontWeight: "bold" }}>Contact Coach</Text>
+          <Text style={{ color: "#FFFFFF", fontSize: 13, fontWeight: "bold" }}>✉ Contact Coach</Text>
         </TouchableOpacity>
       )}
     </View>
