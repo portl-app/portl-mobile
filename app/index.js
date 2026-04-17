@@ -68,27 +68,27 @@ export default function Index() {
 
   if (!isReady || loading) {
     return (
-      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
+      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <StatusBar style="light" />
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <ActivityIndicator size="large" color="#3B82F6" />
+          <ActivityIndicator size="large" color="#000000" />
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
+    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <StatusBar style="light" />
       <View style={{ flex: 1, paddingHorizontal: 24, justifyContent: "center" }}>
         <View style={{ alignItems: "center", marginBottom: 48 }}>
-          <Text style={{ fontSize: 48, fontWeight: "bold", color: "#3B82F6", textAlign: "center", marginBottom: 12 }}>
+          <Text style={{ fontSize: 48, fontWeight: "bold", color: "#000000", textAlign: "center", marginBottom: 12 }}>
             Portl
           </Text>
         </View>
 
-        <View style={{ backgroundColor: "#1E293B", padding: 20, borderRadius: 12, marginBottom: 24 }}>
-          <Text style={{ fontSize: 16, color: "#E2E8F0", lineHeight: 24, textAlign: "center" }}>
+        <View style={{ backgroundColor: "#F5F5F5", padding: 20, borderRadius: 12, marginBottom: 24 }}>
+          <Text style={{ fontSize: 16, color: "#111111", lineHeight: 24, textAlign: "center" }}>
             Connect verified transfer portal athletes with college coaches
           </Text>
         </View>
@@ -102,16 +102,16 @@ export default function Index() {
         <View style={{ gap: 16 }}>
           <TouchableOpacity
             onPress={() => signIn()}
-            style={{ backgroundColor: "#3B82F6", padding: 16, borderRadius: 8, alignItems: "center" }}
+            style={{ backgroundColor: "#000000", padding: 16, borderRadius: 8, alignItems: "center" }}
           >
             <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "bold" }}>Sign In</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => signUp()}
-            style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 8, alignItems: "center", borderWidth: 2, borderColor: "#3B82F6" }}
+            style={{ backgroundColor: "#F5F5F5", padding: 16, borderRadius: 8, alignItems: "center", borderWidth: 2, borderColor: "#000000" }}
           >
-            <Text style={{ color: "#3B82F6", fontSize: 16, fontWeight: "bold" }}>Create Account</Text>
+            <Text style={{ color: "#000000", fontSize: 16, fontWeight: "bold" }}>Create Account</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -1,5 +1,6 @@
 import { AuthModal } from "@/utils/auth/AuthModal";
 import { useAuth } from "@/utils/auth/useAuth";
+import { registerPushToken, savePushToken } from "@/utils/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -20,7 +21,7 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
-  const { initiate, isReady } = useAuth();
+  const { initiate, isReady, auth } = useAuth();
 
   useEffect(() => {
     initiate();
@@ -31,6 +32,13 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [isReady]);
+
+  useEffect(() => {
+    if (!auth) return;
+    registerPushToken().then((token) => {
+      if (token) savePushToken(token, auth);
+    });
+  }, [auth]);
 
   if (!isReady) {
     return null;

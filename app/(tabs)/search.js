@@ -97,18 +97,18 @@ function EmailTemplateModal({ visible, onClose, templates, toEmail, toName }) {
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.6)", justifyContent: "flex-end" }}>
-        <View style={{ backgroundColor: "#1E293B", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20, maxHeight: "90%" }}>
+        <View style={{ backgroundColor: "#F5F5F5", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20, maxHeight: "90%" }}>
           {/* Header */}
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF" }}>Email Templates</Text>
-            <TouchableOpacity onPress={onClose} style={{ backgroundColor: "#334155", borderRadius: 16, padding: 6 }}>
-              <X size={18} color="#94A3B8" />
+            <TouchableOpacity onPress={onClose} style={{ backgroundColor: "#E0E0E0", borderRadius: 16, padding: 6 }}>
+              <X size={18} color="#666666" />
             </TouchableOpacity>
           </View>
 
           {/* To */}
-          <View style={{ backgroundColor: "#0F172A", borderRadius: 8, padding: 10, marginBottom: 12 }}>
-            <Text style={{ fontSize: 12, color: "#64748B" }}>To: <Text style={{ color: "#E2E8F0" }}>{toName} — {toEmail}</Text></Text>
+          <View style={{ backgroundColor: "#FFFFFF", borderRadius: 8, padding: 10, marginBottom: 12 }}>
+            <Text style={{ fontSize: 12, color: "#666666" }}>To: <Text style={{ color: "#111111" }}>{toName} — {toEmail}</Text></Text>
           </View>
 
           {/* Template tabs */}
@@ -118,26 +118,26 @@ function EmailTemplateModal({ visible, onClose, templates, toEmail, toName }) {
                 <TouchableOpacity
                   key={i}
                   onPress={() => setSelectedIndex(i)}
-                  style={{ paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, backgroundColor: selectedIndex === i ? "#3B82F6" : "#0F172A", borderWidth: 1, borderColor: selectedIndex === i ? "#3B82F6" : "#334155" }}
+                  style={{ paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, backgroundColor: selectedIndex === i ? "#000000" : "#FFFFFF", borderWidth: 1, borderColor: selectedIndex === i ? "#000000" : "#E0E0E0" }}
                 >
-                  <Text style={{ color: selectedIndex === i ? "#FFFFFF" : "#94A3B8", fontSize: 13, fontWeight: "600" }}>{t.label}</Text>
+                  <Text style={{ color: selectedIndex === i ? "#FFFFFF" : "#666666", fontSize: 13, fontWeight: "600" }}>{t.label}</Text>
                 </TouchableOpacity>
               ))}
             </View>
           </ScrollView>
 
           {/* Subject */}
-          <View style={{ backgroundColor: "#0F172A", borderRadius: 8, padding: 10, marginBottom: 8 }}>
-            <Text style={{ fontSize: 12, color: "#64748B", marginBottom: 2 }}>Subject</Text>
-            <Text style={{ fontSize: 13, color: "#E2E8F0" }}>{current.subject}</Text>
+          <View style={{ backgroundColor: "#FFFFFF", borderRadius: 8, padding: 10, marginBottom: 8 }}>
+            <Text style={{ fontSize: 12, color: "#666666", marginBottom: 2 }}>Subject</Text>
+            <Text style={{ fontSize: 13, color: "#111111" }}>{current.subject}</Text>
           </View>
 
           {/* Body */}
-          <View style={{ backgroundColor: "#0F172A", borderRadius: 8, padding: 10, marginBottom: 16 }}>
+          <View style={{ backgroundColor: "#FFFFFF", borderRadius: 8, padding: 10, marginBottom: 16 }}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-              <Text style={{ fontSize: 12, color: "#64748B" }}>Message</Text>
+              <Text style={{ fontSize: 12, color: "#666666" }}>Message</Text>
               <TouchableOpacity onPress={() => setEditing(!editing)}>
-                <Text style={{ fontSize: 12, color: "#3B82F6", fontWeight: "600" }}>{editing ? "Done" : "Edit"}</Text>
+                <Text style={{ fontSize: 12, color: "#000000", fontWeight: "600" }}>{editing ? "Done" : "Edit"}</Text>
               </TouchableOpacity>
             </View>
             {editing ? (
@@ -145,21 +145,21 @@ function EmailTemplateModal({ visible, onClose, templates, toEmail, toName }) {
                 value={body}
                 onChangeText={setBody}
                 multiline
-                style={{ color: "#E2E8F0", fontSize: 13, lineHeight: 20, minHeight: 140, textAlignVertical: "top" }}
+                style={{ color: "#111111", fontSize: 13, lineHeight: 20, minHeight: 140, textAlignVertical: "top" }}
               />
             ) : (
               <ScrollView style={{ maxHeight: 160 }}>
-                <Text style={{ color: "#E2E8F0", fontSize: 13, lineHeight: 20 }}>{body}</Text>
+                <Text style={{ color: "#111111", fontSize: 13, lineHeight: 20 }}>{body}</Text>
               </ScrollView>
             )}
           </View>
 
           {/* Actions */}
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <TouchableOpacity onPress={onClose} style={{ flex: 1, backgroundColor: "#334155", padding: 14, borderRadius: 10, alignItems: "center" }}>
-              <Text style={{ color: "#94A3B8", fontWeight: "600" }}>Cancel</Text>
+            <TouchableOpacity onPress={onClose} style={{ flex: 1, backgroundColor: "#E0E0E0", padding: 14, borderRadius: 10, alignItems: "center" }}>
+              <Text style={{ color: "#666666", fontWeight: "600" }}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleSend} style={{ flex: 2, backgroundColor: "#3B82F6", padding: 14, borderRadius: 10, alignItems: "center" }}>
+            <TouchableOpacity onPress={handleSend} style={{ flex: 2, backgroundColor: "#000000", padding: 14, borderRadius: 10, alignItems: "center" }}>
               <Text style={{ color: "#FFFFFF", fontWeight: "bold" }}>Open in Email Client →</Text>
             </TouchableOpacity>
           </View>
@@ -175,27 +175,27 @@ function SportPicker({ selected, onSelect, placeholder }) {
     <View>
       <TouchableOpacity
         onPress={() => setOpen(!open)}
-        style={{ backgroundColor: "#0F172A", padding: 12, borderRadius: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
+        style={{ backgroundColor: "#FFFFFF", padding: 12, borderRadius: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
       >
-        <Text style={{ color: selected ? "#FFFFFF" : "#64748B", fontSize: 14 }}>{selected || placeholder}</Text>
-        <Text style={{ color: "#64748B", fontSize: 12 }}>{open ? "▲" : "▼"}</Text>
+        <Text style={{ color: selected ? "#FFFFFF" : "#666666", fontSize: 14 }}>{selected || placeholder}</Text>
+        <Text style={{ color: "#666666", fontSize: 12 }}>{open ? "▲" : "▼"}</Text>
       </TouchableOpacity>
       {open && (
-        <View style={{ backgroundColor: "#0F172A", borderRadius: 8, marginTop: 4, borderWidth: 1, borderColor: "#334155", maxHeight: 200 }}>
+        <View style={{ backgroundColor: "#FFFFFF", borderRadius: 8, marginTop: 4, borderWidth: 1, borderColor: "#E0E0E0", maxHeight: 200 }}>
           <ScrollView nestedScrollEnabled showsVerticalScrollIndicator>
             <TouchableOpacity
               onPress={() => { onSelect(""); setOpen(false); }}
-              style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: "#1E293B" }}
+              style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: "#F5F5F5" }}
             >
-              <Text style={{ color: "#64748B", fontSize: 14 }}>Any Sport</Text>
+              <Text style={{ color: "#666666", fontSize: 14 }}>Any Sport</Text>
             </TouchableOpacity>
             {SPORTS.map((sport) => (
               <TouchableOpacity
                 key={sport}
                 onPress={() => { onSelect(sport); setOpen(false); }}
-                style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: "#1E293B", backgroundColor: selected === sport ? "#172554" : "transparent" }}
+                style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: "#F5F5F5", backgroundColor: selected === sport ? "#EEF2FF" : "transparent" }}
               >
-                <Text style={{ color: selected === sport ? "#93C5FD" : "#E2E8F0", fontSize: 14 }}>{sport}</Text>
+                <Text style={{ color: selected === sport ? "#3730A3" : "#111111", fontSize: 14 }}>{sport}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -305,7 +305,7 @@ export default function SearchPage() {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <StatusBar style="light" />
 
       <EmailTemplateModal
@@ -317,20 +317,20 @@ export default function SearchPage() {
       />
 
       {/* Header */}
-      <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: "#334155" }}>
+      <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: "#E0E0E0" }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
           <Text style={{ fontSize: 26, fontWeight: "bold", color: "#FFFFFF" }}>
             {userRole === "coach" ? "Find Athletes" : "Find Coaches"}
           </Text>
           <TouchableOpacity onPress={() => setShowFilters(!showFilters)} style={{ padding: 8 }}>
-            <Filter color={showFilters ? "#3B82F6" : "#94A3B8"} size={24} />
+            <Filter color={showFilters ? "#000000" : "#666666"} size={24} />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Filter panel */}
       {showFilters && (
-        <View style={{ backgroundColor: "#1E293B", padding: 16, borderBottomWidth: 1, borderBottomColor: "#334155" }}>
+        <View style={{ backgroundColor: "#F5F5F5", padding: 16, borderBottomWidth: 1, borderBottomColor: "#E0E0E0" }}>
           {userRole === "coach" ? (
             <View style={{ gap: 12 }}>
               {/* Sport picker */}
@@ -342,13 +342,13 @@ export default function SearchPage() {
 
               {/* Gender filter */}
               <View>
-                <Text style={{ color: "#94A3B8", fontSize: 12, marginBottom: 8 }}>Gender</Text>
+                <Text style={{ color: "#666666", fontSize: 12, marginBottom: 8 }}>Gender</Text>
                 <View style={{ flexDirection: "row", gap: 8 }}>
                   {["", "Male", "Female"].map((g) => (
                     <TouchableOpacity
                       key={g || "all"}
                       onPress={() => updateAthleteFilter("gender", g)}
-                      style={{ flex: 1, backgroundColor: athleteFilters.gender === g ? "#3B82F6" : "#0F172A", padding: 10, borderRadius: 6, alignItems: "center", borderWidth: 1, borderColor: athleteFilters.gender === g ? "#3B82F6" : "#334155" }}
+                      style={{ flex: 1, backgroundColor: athleteFilters.gender === g ? "#000000" : "#FFFFFF", padding: 10, borderRadius: 6, alignItems: "center", borderWidth: 1, borderColor: athleteFilters.gender === g ? "#000000" : "#E0E0E0" }}
                     >
                       <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: athleteFilters.gender === g ? "700" : "400" }}>
                         {g || "All"}
@@ -360,12 +360,12 @@ export default function SearchPage() {
 
               {/* Division level */}
               <View>
-                <Text style={{ color: "#94A3B8", fontSize: 12, marginBottom: 8 }}>Division</Text>
+                <Text style={{ color: "#666666", fontSize: 12, marginBottom: 8 }}>Division</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <View style={{ flexDirection: "row", gap: 6 }}>
                     <TouchableOpacity
                       onPress={() => updateAthleteFilter("division_level", "")}
-                      style={{ backgroundColor: !athleteFilters.division_level ? "#3B82F6" : "#0F172A", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: !athleteFilters.division_level ? "#3B82F6" : "#334155" }}
+                      style={{ backgroundColor: !athleteFilters.division_level ? "#000000" : "#FFFFFF", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: !athleteFilters.division_level ? "#000000" : "#E0E0E0" }}
                     >
                       <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: !athleteFilters.division_level ? "700" : "400" }}>All</Text>
                     </TouchableOpacity>
@@ -373,7 +373,7 @@ export default function SearchPage() {
                       <TouchableOpacity
                         key={level}
                         onPress={() => updateAthleteFilter("division_level", athleteFilters.division_level === level ? "" : level)}
-                        style={{ backgroundColor: athleteFilters.division_level === level ? "#3B82F6" : "#0F172A", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: athleteFilters.division_level === level ? "#3B82F6" : "#334155" }}
+                        style={{ backgroundColor: athleteFilters.division_level === level ? "#000000" : "#FFFFFF", paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: athleteFilters.division_level === level ? "#000000" : "#E0E0E0" }}
                       >
                         <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: athleteFilters.division_level === level ? "700" : "400" }}>{level}</Text>
                       </TouchableOpacity>
@@ -382,7 +382,7 @@ export default function SearchPage() {
                 </ScrollView>
               </View>
 
-              <TouchableOpacity onPress={performSearch} style={{ backgroundColor: "#3B82F6", padding: 12, borderRadius: 8, alignItems: "center" }}>
+              <TouchableOpacity onPress={performSearch} style={{ backgroundColor: "#000000", padding: 12, borderRadius: 8, alignItems: "center" }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "bold" }}>Apply Filters</Text>
               </TouchableOpacity>
             </View>
@@ -393,7 +393,7 @@ export default function SearchPage() {
                 onSelect={(v) => updateCoachFilter("sport", v)}
                 placeholder="Any sport"
               />
-              <TouchableOpacity onPress={performSearch} style={{ backgroundColor: "#3B82F6", padding: 12, borderRadius: 8, alignItems: "center" }}>
+              <TouchableOpacity onPress={performSearch} style={{ backgroundColor: "#000000", padding: 12, borderRadius: 8, alignItems: "center" }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "bold" }}>Apply Filters</Text>
               </TouchableOpacity>
             </View>
@@ -408,15 +408,15 @@ export default function SearchPage() {
       >
         {loading ? (
           <View style={{ paddingTop: 40, alignItems: "center" }}>
-            <ActivityIndicator size="large" color="#3B82F6" />
+            <ActivityIndicator size="large" color="#000000" />
           </View>
         ) : results.length === 0 ? (
           <View style={{ paddingTop: 40, alignItems: "center" }}>
-            <SearchIcon color="#64748B" size={48} />
-            <Text style={{ fontSize: 16, color: "#94A3B8", marginTop: 16, textAlign: "center" }}>
+            <SearchIcon color="#666666" size={48} />
+            <Text style={{ fontSize: 16, color: "#666666", marginTop: 16, textAlign: "center" }}>
               {userRole === "coach" ? "No athletes found" : "No coaches found"}
             </Text>
-            <Text style={{ fontSize: 13, color: "#475569", marginTop: 8, textAlign: "center" }}>
+            <Text style={{ fontSize: 13, color: "#666666", marginTop: 8, textAlign: "center" }}>
               Try adjusting your filters
             </Text>
           </View>
@@ -438,14 +438,14 @@ export default function SearchPage() {
 
 function AthleteResultCard({ athlete, onContact }) {
   return (
-    <View style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#334155" }}>
+    <View style={{ backgroundColor: "#F5F5F5", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#E0E0E0" }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#E2E8F0", marginBottom: 2 }}>{athlete.full_name}</Text>
-          <Text style={{ fontSize: 13, color: "#64748B" }}>{athlete.current_school}</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#111111", marginBottom: 2 }}>{athlete.full_name}</Text>
+          <Text style={{ fontSize: 13, color: "#666666" }}>{athlete.current_school}</Text>
         </View>
         {athlete.years_of_eligibility && (
-          <Text style={{ fontSize: 12, color: "#94A3B8" }}>{athlete.years_of_eligibility} yr elig.</Text>
+          <Text style={{ fontSize: 12, color: "#666666" }}>{athlete.years_of_eligibility} yr elig.</Text>
         )}
       </View>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
@@ -455,18 +455,18 @@ function AthleteResultCard({ athlete, onContact }) {
           </View>
         )}
         {athlete.position && (
-          <View style={{ backgroundColor: "#1E3A5F", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: "#93C5FD", fontSize: 11, fontWeight: "600" }}>{athlete.position}</Text>
+          <View style={{ backgroundColor: "#DBEAFE", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#1D4ED8", fontSize: 11, fontWeight: "600" }}>{athlete.position}</Text>
           </View>
         )}
         {athlete.division_level && (
-          <View style={{ backgroundColor: "#172554", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: "#BFDBFE", fontSize: 11, fontWeight: "600" }}>{athlete.division_level}</Text>
+          <View style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#3730A3", fontSize: 11, fontWeight: "600" }}>{athlete.division_level}</Text>
           </View>
         )}
         {athlete.gender && (
-          <View style={{ backgroundColor: athlete.gender === "Male" ? "#1E3A5F" : "#3B1F5E", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: athlete.gender === "Male" ? "#93C5FD" : "#D8B4FE", fontSize: 11, fontWeight: "600" }}>{athlete.gender}</Text>
+          <View style={{ backgroundColor: athlete.gender === "Male" ? "#DBEAFE" : "#F5F3FF", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: athlete.gender === "Male" ? "#1D4ED8" : "#6D28D9", fontSize: 11, fontWeight: "600" }}>{athlete.gender}</Text>
           </View>
         )}
         {athlete.stats_link && (
@@ -487,9 +487,9 @@ function AthleteResultCard({ athlete, onContact }) {
         {athlete.school_athletics_link && (
           <TouchableOpacity
             onPress={() => Linking.openURL(athlete.school_athletics_link)}
-            style={{ flex: 1, backgroundColor: "#1E3A5F", padding: 10, borderRadius: 8, alignItems: "center" }}
+            style={{ flex: 1, backgroundColor: "#DBEAFE", padding: 10, borderRadius: 8, alignItems: "center" }}
           >
-            <Text style={{ color: "#93C5FD", fontSize: 12, fontWeight: "600" }}>School Profile →</Text>
+            <Text style={{ color: "#1D4ED8", fontSize: 12, fontWeight: "600" }}>School Profile →</Text>
           </TouchableOpacity>
         )}
         {athlete.optional_contact_email && (
@@ -507,9 +507,9 @@ function AthleteResultCard({ athlete, onContact }) {
 
 function CoachResultCard({ coach, onContact }) {
   return (
-    <View style={{ backgroundColor: "#1E293B", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#334155" }}>
-      <Text style={{ fontSize: 16, fontWeight: "bold", color: "#E2E8F0", marginBottom: 2 }}>{coach.full_name}</Text>
-      <Text style={{ fontSize: 13, color: "#64748B", marginBottom: 10 }}>{coach.school}</Text>
+    <View style={{ backgroundColor: "#F5F5F5", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#E0E0E0" }}>
+      <Text style={{ fontSize: 16, fontWeight: "bold", color: "#111111", marginBottom: 2 }}>{coach.full_name}</Text>
+      <Text style={{ fontSize: 13, color: "#666666", marginBottom: 10 }}>{coach.school}</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
         {coach.sport && (
           <View style={{ backgroundColor: "#065F46", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
@@ -517,15 +517,15 @@ function CoachResultCard({ coach, onContact }) {
           </View>
         )}
         {coach.division_level && (
-          <View style={{ backgroundColor: "#172554", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: "#BFDBFE", fontSize: 11, fontWeight: "600" }}>{coach.division_level}</Text>
+          <View style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#3730A3", fontSize: 11, fontWeight: "600" }}>{coach.division_level}</Text>
           </View>
         )}
       </View>
       {coach.email && (
         <TouchableOpacity
           onPress={() => onContact(coach)}
-          style={{ backgroundColor: "#3B82F6", padding: 12, borderRadius: 8, alignItems: "center" }}
+          style={{ backgroundColor: "#000000", padding: 12, borderRadius: 8, alignItems: "center" }}
         >
           <Text style={{ color: "#FFFFFF", fontSize: 13, fontWeight: "bold" }}>✉ Contact Coach</Text>
         </TouchableOpacity>

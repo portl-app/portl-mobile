@@ -23,11 +23,11 @@ export default function PremiumBoostPage() {
   ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0F172A", paddingTop: insets.top }}>
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF", paddingTop: insets.top }}>
       <StatusBar style="light" />
 
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#1E293B" }}>
-        <TouchableOpacity onPress={() => router.back()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#1E293B", justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#F5F5F5" }}>
+        <TouchableOpacity onPress={() => router.back()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#F5F5F5", justifyContent: "center", alignItems: "center" }}>
           <ArrowLeft size={20} color="#FFFFFF" />
         </TouchableOpacity>
         <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginLeft: 16 }}>Premium Boost</Text>
@@ -48,13 +48,13 @@ export default function PremiumBoostPage() {
         <Text style={{ fontSize: 22, fontWeight: "bold", color: "#FFFFFF", marginBottom: 20 }}>Premium Features</Text>
         <View style={{ gap: 16, marginBottom: 32 }}>
           {features.map((feature, index) => (
-            <View key={index} style={{ backgroundColor: "#1E293B", padding: 20, borderRadius: 12, flexDirection: "row", alignItems: "flex-start", borderWidth: 1, borderColor: "#334155" }}>
+            <View key={index} style={{ backgroundColor: "#F5F5F5", padding: 20, borderRadius: 12, flexDirection: "row", alignItems: "flex-start", borderWidth: 1, borderColor: "#E0E0E0" }}>
               <View style={{ backgroundColor: "#7C3AED", width: 44, height: 44, borderRadius: 22, justifyContent: "center", alignItems: "center", marginRight: 16 }}>
                 <feature.icon size={22} color="#FFFFFF" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16, fontWeight: "bold", color: "#FFFFFF", marginBottom: 6 }}>{feature.title}</Text>
-                <Text style={{ fontSize: 14, color: "#94A3B8", lineHeight: 20 }}>{feature.description}</Text>
+                <Text style={{ fontSize: 14, color: "#666666", lineHeight: 20 }}>{feature.description}</Text>
               </View>
             </View>
           ))}
@@ -63,7 +63,7 @@ export default function PremiumBoostPage() {
         <Text style={{ fontSize: 22, fontWeight: "bold", color: "#FFFFFF", marginBottom: 20 }}>Choose Your Plan</Text>
         <View style={{ gap: 16, marginBottom: 32 }}>
           {plans.map((plan, index) => (
-            <TouchableOpacity key={index} style={{ backgroundColor: plan.popular ? "#7C3AED" : "#1E293B", padding: 20, borderRadius: 12, borderWidth: plan.popular ? 3 : 1, borderColor: plan.popular ? "#FDE047" : "#334155" }}>
+            <TouchableOpacity key={index} style={{ backgroundColor: plan.popular ? "#7C3AED" : "#F5F5F5", padding: 20, borderRadius: 12, borderWidth: plan.popular ? 3 : 1, borderColor: plan.popular ? "#FDE047" : "#E0E0E0" }}>
               {plan.popular && (
                 <View style={{ position: "absolute", top: -12, left: 20, backgroundColor: "#FDE047", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12 }}>
                   <Text style={{ fontSize: 12, fontWeight: "bold", color: "#78350F" }}>MOST POPULAR</Text>
@@ -72,7 +72,7 @@ export default function PremiumBoostPage() {
               <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <View>
                   <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginBottom: 4 }}>{plan.name}</Text>
-                  <Text style={{ fontSize: 14, color: plan.popular ? "#E9D5FF" : "#94A3B8" }}>{plan.period}</Text>
+                  <Text style={{ fontSize: 14, color: plan.popular ? "#E9D5FF" : "#666666" }}>{plan.period}</Text>
                 </View>
                 <View style={{ alignItems: "flex-end" }}>
                   <Text style={{ fontSize: 28, fontWeight: "bold", color: "#FFFFFF" }}>{plan.price}</Text>
@@ -86,7 +86,7 @@ export default function PremiumBoostPage() {
           ))}
         </View>
 
-        <View style={{ backgroundColor: "#1E293B", padding: 20, borderRadius: 12, borderWidth: 1, borderColor: "#334155" }}>
+        <View style={{ backgroundColor: "#F5F5F5", padding: 20, borderRadius: 12, borderWidth: 1, borderColor: "#E0E0E0" }}>
           <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF", marginBottom: 16 }}>How It Works</Text>
           <View style={{ gap: 12 }}>
             {[
@@ -99,7 +99,7 @@ export default function PremiumBoostPage() {
                 <View style={{ backgroundColor: "#10B981", width: 20, height: 20, borderRadius: 10, justifyContent: "center", alignItems: "center", marginRight: 12, marginTop: 2 }}>
                   <Check size={12} color="#FFFFFF" />
                 </View>
-                <Text style={{ flex: 1, fontSize: 14, color: "#CBD5E1", lineHeight: 20 }}>{item}</Text>
+                <Text style={{ flex: 1, fontSize: 14, color: "#333333", lineHeight: 20 }}>{item}</Text>
               </View>
             ))}
           </View>

@@ -9,14 +9,14 @@ export default function TabLayout() {
         tabBarPosition: "bottom",
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: "#1E293B",
+          backgroundColor: "#F5F5F5",
           borderTopWidth: 1,
-          borderTopColor: "#334155",
+          borderTopColor: "#E0E0E0",
           paddingBottom: 8,
           height: 60,
         },
-        tabBarActiveTintColor: "#3B82F6",
-        tabBarInactiveTintColor: "#64748B",
+        tabBarActiveTintColor: "#000000",
+        tabBarInactiveTintColor: "#666666",
       }}
     >
       <Tabs.Screen

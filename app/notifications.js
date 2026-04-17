@@ -73,9 +73,9 @@ export default function NotificationsPage() {
   };
 
   const getNotificationIcon = (type) => {
-    if (type === "profile_view") return <Eye size={20} color="#3B82F6" />;
+    if (type === "profile_view") return <Eye size={20} color="#000000" />;
     if (type === "favorited") return <Heart size={20} color="#F43F5E" fill="#F43F5E" />;
-    return <Bell size={20} color="#94A3B8" />;
+    return <Bell size={20} color="#666666" />;
   };
 
   const formatTimestamp = (timestamp) => {
@@ -94,10 +94,10 @@ export default function NotificationsPage() {
 
   if (loading) {
     return (
-      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
+      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <StatusBar style="light" />
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <ActivityIndicator size="large" color="#3B82F6" />
+          <ActivityIndicator size="large" color="#000000" />
         </View>
       </SafeAreaView>
     );
@@ -105,22 +105,22 @@ export default function NotificationsPage() {
 
   if (userRole === "coach") {
     return (
-      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
+      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <StatusBar style="light" />
-        <View style={{ flexDirection: "row", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#1E293B" }}>
-          <TouchableOpacity onPress={() => router.back()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#1E293B", justifyContent: "center", alignItems: "center" }}>
+        <View style={{ flexDirection: "row", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#F5F5F5" }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#F5F5F5", justifyContent: "center", alignItems: "center" }}>
             <ArrowLeft size={20} color="#FFFFFF" />
           </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginLeft: 16 }}>Notifications</Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 32 }}>
-          <View style={{ backgroundColor: "#1E293B", width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", marginBottom: 16 }}>
-            <Bell size={32} color="#94A3B8" />
+          <View style={{ backgroundColor: "#F5F5F5", width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", marginBottom: 16 }}>
+            <Bell size={32} color="#666666" />
           </View>
           <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8, textAlign: "center" }}>
             Not Available for Coaches
           </Text>
-          <Text style={{ fontSize: 14, color: "#94A3B8", textAlign: "center", lineHeight: 22 }}>
+          <Text style={{ fontSize: 14, color: "#666666", textAlign: "center", lineHeight: 22 }}>
             Notifications are only available for athletes. Coaches can view athlete profiles in the Search tab.
           </Text>
         </View>
@@ -129,18 +129,18 @@ export default function NotificationsPage() {
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
+    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <StatusBar style="light" />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 16, borderBottomWidth: 1, borderBottomColor: "#1E293B" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 16, borderBottomWidth: 1, borderBottomColor: "#F5F5F5" }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableOpacity onPress={() => router.back()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#1E293B", justifyContent: "center", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#F5F5F5", justifyContent: "center", alignItems: "center" }}>
             <ArrowLeft size={20} color="#FFFFFF" />
           </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginLeft: 16 }}>Notifications</Text>
         </View>
         {unreadCount > 0 && (
-          <TouchableOpacity onPress={() => markAsRead()} style={{ paddingHorizontal: 12, paddingVertical: 6, backgroundColor: "#1E293B", borderRadius: 8 }}>
-            <Text style={{ fontSize: 13, color: "#3B82F6", fontWeight: "600" }}>Mark All Read</Text>
+          <TouchableOpacity onPress={() => markAsRead()} style={{ paddingHorizontal: 12, paddingVertical: 6, backgroundColor: "#F5F5F5", borderRadius: 8 }}>
+            <Text style={{ fontSize: 13, color: "#000000", fontWeight: "600" }}>Mark All Read</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -148,11 +148,11 @@ export default function NotificationsPage() {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 16 }} showsVerticalScrollIndicator={false}>
         {notifications.length === 0 ? (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingVertical: 80 }}>
-            <View style={{ backgroundColor: "#1E293B", width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", marginBottom: 16 }}>
-              <Bell size={32} color="#94A3B8" />
+            <View style={{ backgroundColor: "#F5F5F5", width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", marginBottom: 16 }}>
+              <Bell size={32} color="#666666" />
             </View>
             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8 }}>No Notifications Yet</Text>
-            <Text style={{ fontSize: 14, color: "#94A3B8", textAlign: "center", paddingHorizontal: 32 }}>
+            <Text style={{ fontSize: 14, color: "#666666", textAlign: "center", paddingHorizontal: 32 }}>
               You'll be notified when coaches view or favorite your profile
             </Text>
           </View>
@@ -162,18 +162,18 @@ export default function NotificationsPage() {
               <TouchableOpacity
                 key={notification.id}
                 onPress={() => { if (!notification.is_read) markAsRead(notification.id); }}
-                style={{ backgroundColor: notification.is_read ? "#1E293B" : "#1E3A5F", padding: 16, borderRadius: 12, borderLeftWidth: 3, borderLeftColor: notification.is_read ? "#334155" : "#3B82F6" }}
+                style={{ backgroundColor: notification.is_read ? "#F5F5F5" : "#EFF6FF", padding: 16, borderRadius: 12, borderLeftWidth: 3, borderLeftColor: notification.is_read ? "#E0E0E0" : "#1D4ED8" }}
               >
                 <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
-                  <View style={{ backgroundColor: notification.is_read ? "#334155" : "#1E3A8A", width: 40, height: 40, borderRadius: 20, justifyContent: "center", alignItems: "center" }}>
+                  <View style={{ backgroundColor: notification.is_read ? "#E0E0E0" : "#1E3A8A", width: 40, height: 40, borderRadius: 20, justifyContent: "center", alignItems: "center" }}>
                     {getNotificationIcon(notification.notification_type)}
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={{ fontSize: 15, color: "#FFFFFF", lineHeight: 22, marginBottom: 6 }}>{notification.message}</Text>
-                    <Text style={{ fontSize: 13, color: "#94A3B8" }}>{formatTimestamp(notification.created_at)}</Text>
+                    <Text style={{ fontSize: 13, color: "#666666" }}>{formatTimestamp(notification.created_at)}</Text>
                   </View>
                   {!notification.is_read && (
-                    <View style={{ backgroundColor: "#3B82F6", width: 8, height: 8, borderRadius: 4, marginTop: 8 }} />
+                    <View style={{ backgroundColor: "#000000", width: 8, height: 8, borderRadius: 4, marginTop: 8 }} />
                   )}
                 </View>
               </TouchableOpacity>

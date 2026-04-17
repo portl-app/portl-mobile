@@ -40,20 +40,20 @@ export default function RoleSelection() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#0F172A" }}>
+    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <StatusBar style="light" />
       <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 32 }}>
         <View style={{ alignItems: "center", marginBottom: 32 }}>
-          <Text style={{ fontSize: 36, fontWeight: "bold", color: "#3B82F6", marginBottom: 8 }}>Portl</Text>
+          <Text style={{ fontSize: 36, fontWeight: "bold", color: "#000000", marginBottom: 8 }}>Portl</Text>
         </View>
         <Text style={{ fontSize: 28, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8 }}>I am a...</Text>
-        <Text style={{ fontSize: 16, color: "#94A3B8", marginBottom: 32 }}>Select your role to get started</Text>
+        <Text style={{ fontSize: 16, color: "#666666", marginBottom: 32 }}>Select your role to get started</Text>
 
         <View style={{ gap: 16 }}>
           <TouchableOpacity
             onPress={() => selectRole("athlete")}
             disabled={loading}
-            style={{ backgroundColor: "#3B82F6", padding: 24, borderRadius: 12, opacity: loading ? 0.5 : 1 }}
+            style={{ backgroundColor: "#000000", padding: 24, borderRadius: 12, opacity: loading ? 0.5 : 1 }}
           >
             <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8 }}>Athlete</Text>
             <Text style={{ fontSize: 14, color: "#DBEAFE", lineHeight: 20 }}>
@@ -64,10 +64,10 @@ export default function RoleSelection() {
           <TouchableOpacity
             onPress={() => selectRole("coach")}
             disabled={loading}
-            style={{ backgroundColor: "#1E293B", padding: 24, borderRadius: 12, borderWidth: 1, borderColor: "#334155", opacity: loading ? 0.5 : 1 }}
+            style={{ backgroundColor: "#F5F5F5", padding: 24, borderRadius: 12, borderWidth: 1, borderColor: "#E0E0E0", opacity: loading ? 0.5 : 1 }}
           >
             <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8 }}>Coach</Text>
-            <Text style={{ fontSize: 14, color: "#94A3B8", lineHeight: 20 }}>
+            <Text style={{ fontSize: 14, color: "#666666", lineHeight: 20 }}>
               I'm looking for verified transfer portal athletes to recruit
             </Text>
           </TouchableOpacity>
@@ -81,7 +81,7 @@ export default function RoleSelection() {
 
         {loading && (
           <View style={{ marginTop: 32, alignItems: "center" }}>
-            <ActivityIndicator size="large" color="#3B82F6" />
+            <ActivityIndicator size="large" color="#000000" />
           </View>
         )}
       </View>
