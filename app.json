@@ -1,17 +1,24 @@
 {
   "expo": {
-    "name": "portl-mobile",
-    "slug": "portl-mobile",
+    "name": "Portl",
+    "slug": "portl",
     "version": "1.0.0",
+    "description": "The #1 platform for NCAA transfer portal athletes and coaches",
+    "owner": "portlapp",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "portlmobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.portl.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.portl.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -44,6 +51,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "9bfe5b16-99b9-435f-b6a4-435a33a809bc"
+      }
     }
   }
 }

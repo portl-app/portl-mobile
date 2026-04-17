@@ -13,8 +13,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const STATUS_COLORS = {
-  verified: { bg: "#065F46", color: "#6EE7B7" },
-  pending:  { bg: "#DBEAFE", color: "#1D4ED8" },
+  verified: { bg: "#000000", color: "#FFFFFF" },
+  pending:  { bg: "#F5F5F5", color: "#333333" },
   flagged:  { bg: "#78350F", color: "#FCD34D" },
   rejected: { bg: "#7F1D1D", color: "#FCA5A5" },
 };
@@ -97,7 +97,7 @@ export default function HomePage() {
             </Text>
             <Text style={{ fontSize: 13, color: "#666666" }}>{userEmail}</Text>
           </View>
-          <View style={{ backgroundColor: userRole === "athlete" ? "#1D4ED8" : "#065F46", paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999 }}>
+          <View style={{ backgroundColor: "#000000", paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999 }}>
             <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: "600", textTransform: "capitalize" }}>{userRole}</Text>
           </View>
         </View>
@@ -129,18 +129,18 @@ function AthleteHome({ profile, discover, router }) {
         <Text style={{ color: "#666666", fontSize: 13, marginBottom: 14 }}>{profile.current_school}</Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
           {profile.sport && (
-            <View style={{ backgroundColor: "#1D4ED8", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+            <View style={{ backgroundColor: "#000000", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
               <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{profile.sport}</Text>
             </View>
           )}
           {profile.position && (
-            <View style={{ backgroundColor: "#DBEAFE", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
-              <Text style={{ color: "#1D4ED8", fontSize: 11, fontWeight: "600" }}>{profile.position}</Text>
+            <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+              <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{profile.position}</Text>
             </View>
           )}
           {profile.division_level && (
-            <View style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
-              <Text style={{ color: "#3730A3", fontSize: 11, fontWeight: "600" }}>{profile.division_level}</Text>
+            <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+              <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{profile.division_level}</Text>
             </View>
           )}
           <View style={{ backgroundColor: statusColor.bg, paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
@@ -178,13 +178,13 @@ function CoachCard({ coach }) {
           <Text style={{ color: "#666666", fontSize: 13, marginBottom: 8 }}>{coach.school}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
             {coach.sport && (
-              <View style={{ backgroundColor: "#065F46", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: "#6EE7B7", fontSize: 11, fontWeight: "600" }}>{coach.sport}</Text>
+              <View style={{ backgroundColor: "#000000", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+                <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{coach.sport}</Text>
               </View>
             )}
             {coach.division_level && (
-              <View style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: "#3730A3", fontSize: 11, fontWeight: "600" }}>{coach.division_level}</Text>
+              <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+                <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{coach.division_level}</Text>
               </View>
             )}
           </View>
@@ -192,7 +192,7 @@ function CoachCard({ coach }) {
         {coach.email && (
           <TouchableOpacity
             onPress={() => Linking.openURL(`mailto:${coach.email}`)}
-            style={{ backgroundColor: "#1D4ED8", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8, marginLeft: 12 }}
+            style={{ backgroundColor: "#000000", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8, marginLeft: 12 }}
           >
             <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: "600" }}>Contact</Text>
           </TouchableOpacity>
@@ -215,16 +215,16 @@ function CoachHome({ profile, discover, savedCount, router }) {
         <Text style={{ color: "#666666", fontSize: 13, marginBottom: 14 }}>{profile.school}</Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
           {profile.sport && (
-            <View style={{ backgroundColor: "#065F46", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
-              <Text style={{ color: "#6EE7B7", fontSize: 11, fontWeight: "600" }}>{profile.sport}</Text>
+            <View style={{ backgroundColor: "#000000", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+              <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{profile.sport}</Text>
             </View>
           )}
-          <View style={{ backgroundColor: "#DBEAFE", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
-            <Text style={{ color: "#1D4ED8", fontSize: 11, fontWeight: "600" }}>Coach</Text>
+          <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+            <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>Coach</Text>
           </View>
           {profile.division_level && (
-            <View style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
-              <Text style={{ color: "#3730A3", fontSize: 11, fontWeight: "600" }}>{profile.division_level}</Text>
+            <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+              <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{profile.division_level}</Text>
             </View>
           )}
         </View>
@@ -290,18 +290,18 @@ function AthleteCard({ athlete }) {
           <Text style={{ color: "#666666", fontSize: 13, marginBottom: 8 }}>{athlete.current_school}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
             {athlete.sport && (
-              <View style={{ backgroundColor: "#1D4ED8", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+              <View style={{ backgroundColor: "#000000", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{athlete.sport}</Text>
               </View>
             )}
             {athlete.position && (
-              <View style={{ backgroundColor: "#DBEAFE", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: "#1D4ED8", fontSize: 11, fontWeight: "600" }}>{athlete.position}</Text>
+              <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+                <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{athlete.position}</Text>
               </View>
             )}
             {athlete.gender && (
-              <View style={{ backgroundColor: athlete.gender === "Male" ? "#DBEAFE" : "#F5F3FF", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: athlete.gender === "Male" ? "#1D4ED8" : "#6D28D9", fontSize: 11, fontWeight: "600" }}>{athlete.gender}</Text>
+              <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+                <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{athlete.gender}</Text>
               </View>
             )}
           </View>

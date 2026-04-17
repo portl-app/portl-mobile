@@ -4,42 +4,28 @@ import { Home, Search, User } from "lucide-react-native";
 export default function TabLayout() {
   return (
     <Tabs
+      tabBar={undefined}
       screenOptions={{
         headerShown: false,
         tabBarPosition: "bottom",
-        tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: "#F5F5F5",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "#FFFFFF",
           borderTopWidth: 1,
           borderTopColor: "#E0E0E0",
-          paddingBottom: 8,
           height: 60,
         },
         tabBarActiveTintColor: "#000000",
-        tabBarInactiveTintColor: "#666666",
+        tabBarInactiveTintColor: "#999999",
+        tabBarShowLabel: false,
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => <Home color={color} size={24} />,
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: "Search",
-          tabBarIcon: ({ color }) => <Search color={color} size={24} />,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => <User color={color} size={24} />,
-        }}
-      />
+      <Tabs.Screen name="index" options={{ tabBarIcon: ({ color }) => <Home color={color} size={24} /> }} />
+      <Tabs.Screen name="search" options={{ tabBarIcon: ({ color }) => <Search color={color} size={24} /> }} />
+      <Tabs.Screen name="profile" options={{ tabBarIcon: ({ color }) => <User color={color} size={24} /> }} />
     </Tabs>
   );
 }
