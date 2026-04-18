@@ -35,12 +35,12 @@ export default function PremiumBoostPage() {
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 24, paddingBottom: insets.bottom + 24 }} showsVerticalScrollIndicator={false}>
 
-        <View style={{ backgroundColor: "#7C3AED", borderRadius: 20, padding: 32, marginBottom: 32, alignItems: "center" }}>
+        <View style={{ backgroundColor: "#000000", borderRadius: 20, padding: 32, marginBottom: 32, alignItems: "center" }}>
           <View style={{ backgroundColor: "#FDE047", width: 80, height: 80, borderRadius: 40, justifyContent: "center", alignItems: "center", marginBottom: 20 }}>
             <Sparkles size={40} color="#78350F" />
           </View>
           <Text style={{ fontSize: 28, fontWeight: "bold", color: "#FFFFFF", marginBottom: 12, textAlign: "center" }}>Get Discovered Faster</Text>
-          <Text style={{ fontSize: 16, color: "#E9D5FF", textAlign: "center", lineHeight: 24 }}>
+          <Text style={{ fontSize: 16, color: "#CCCCCC", textAlign: "center", lineHeight: 24 }}>
             Premium athletes get 10x more profile views and appear at the top of every recruiter's feed
           </Text>
         </View>
@@ -49,7 +49,7 @@ export default function PremiumBoostPage() {
         <View style={{ gap: 16, marginBottom: 32 }}>
           {features.map((feature, index) => (
             <View key={index} style={{ backgroundColor: "#F5F5F5", padding: 20, borderRadius: 12, flexDirection: "row", alignItems: "flex-start", borderWidth: 1, borderColor: "#E0E0E0" }}>
-              <View style={{ backgroundColor: "#7C3AED", width: 44, height: 44, borderRadius: 22, justifyContent: "center", alignItems: "center", marginRight: 16 }}>
+              <View style={{ backgroundColor: "#333333", width: 44, height: 44, borderRadius: 22, justifyContent: "center", alignItems: "center", marginRight: 16 }}>
                 <feature.icon size={22} color="#FFFFFF" />
               </View>
               <View style={{ flex: 1 }}>
@@ -63,7 +63,7 @@ export default function PremiumBoostPage() {
         <Text style={{ fontSize: 22, fontWeight: "bold", color: "#FFFFFF", marginBottom: 20 }}>Choose Your Plan</Text>
         <View style={{ gap: 16, marginBottom: 32 }}>
           {plans.map((plan, index) => (
-            <TouchableOpacity key={index} style={{ backgroundColor: plan.popular ? "#7C3AED" : "#F5F5F5", padding: 20, borderRadius: 12, borderWidth: plan.popular ? 3 : 1, borderColor: plan.popular ? "#FDE047" : "#E0E0E0" }}>
+            <TouchableOpacity key={index} style={{ backgroundColor: plan.popular ? "#000000" : "#F5F5F5", padding: 20, borderRadius: 12, borderWidth: plan.popular ? 3 : 1, borderColor: plan.popular ? "#FDE047" : "#E0E0E0" }}>
               {plan.popular && (
                 <View style={{ position: "absolute", top: -12, left: 20, backgroundColor: "#FDE047", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12 }}>
                   <Text style={{ fontSize: 12, fontWeight: "bold", color: "#78350F" }}>MOST POPULAR</Text>
@@ -72,15 +72,15 @@ export default function PremiumBoostPage() {
               <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <View>
                   <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginBottom: 4 }}>{plan.name}</Text>
-                  <Text style={{ fontSize: 14, color: plan.popular ? "#E9D5FF" : "#666666" }}>{plan.period}</Text>
+                  <Text style={{ fontSize: 14, color: plan.popular ? "#CCCCCC" : "#666666" }}>{plan.period}</Text>
                 </View>
                 <View style={{ alignItems: "flex-end" }}>
                   <Text style={{ fontSize: 28, fontWeight: "bold", color: "#FFFFFF" }}>{plan.price}</Text>
                   {plan.savings && <Text style={{ fontSize: 13, color: "#FDE047", fontWeight: "600" }}>{plan.savings}</Text>}
                 </View>
               </View>
-              <View style={{ backgroundColor: plan.popular ? "#FFFFFF" : "#7C3AED", paddingVertical: 12, borderRadius: 8, alignItems: "center" }}>
-                <Text style={{ fontSize: 16, fontWeight: "bold", color: plan.popular ? "#7C3AED" : "#FFFFFF" }}>Select Plan</Text>
+              <View style={{ backgroundColor: plan.popular ? "#FFFFFF" : "#000000", paddingVertical: 12, borderRadius: 8, alignItems: "center" }}>
+                <Text style={{ fontSize: 16, fontWeight: "bold", color: plan.popular ? "#000000" : "#FFFFFF" }}>Select Plan</Text>
               </View>
             </TouchableOpacity>
           ))}

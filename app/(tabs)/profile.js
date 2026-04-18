@@ -15,8 +15,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const STATUS_COLORS = {
-  verified: { bg: "#065F46", color: "#6EE7B7", label: "Verified" },
-  pending:  { bg: "#DBEAFE", color: "#1D4ED8", label: "Pending Review" },
+  verified: { bg: "#000000", color: "#FFFFFF", label: "Verified" },
+  pending:  { bg: "#F5F5F5", color: "#333333", label: "Pending Review" },
   flagged:  { bg: "#78350F", color: "#FCD34D", label: "Flagged" },
   rejected: { bg: "#7F1D1D", color: "#FCA5A5", label: "Rejected" },
 };
@@ -63,9 +63,9 @@ function LinkRow({ label, url, buttonLabel }) {
       <Text style={{ fontSize: 13, color: "#666666", marginBottom: 6 }}>{label}</Text>
       <TouchableOpacity
         onPress={() => Linking.openURL(url)}
-        style={{ backgroundColor: "#EEF2FF", padding: 10, borderRadius: 8, alignItems: "center" }}
+        style={{ backgroundColor: "#F5F5F5", padding: 10, borderRadius: 8, alignItems: "center" }}
       >
-        <Text style={{ color: "#1D4ED8", fontSize: 13, fontWeight: "600" }}>{buttonLabel || "Open →"}</Text>
+        <Text style={{ color: "#333333", fontSize: 13, fontWeight: "600" }}>{buttonLabel || "Open →"}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -179,7 +179,7 @@ export default function ProfilePage() {
 
         {/* Identity card */}
         <View style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: "#E0E0E0", alignItems: "center" }}>
-          <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: userRole === "athlete" ? "#1D4ED8" : "#065F46", justifyContent: "center", alignItems: "center", marginBottom: 12 }}>
+          <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: "#000000", justifyContent: "center", alignItems: "center", marginBottom: 12 }}>
             <Text style={{ color: "#FFFFFF", fontSize: 28, fontWeight: "bold" }}>
               {profile?.full_name?.charAt(0)?.toUpperCase() || "?"}
             </Text>
@@ -189,7 +189,7 @@ export default function ProfilePage() {
           </Text>
           <Text style={{ fontSize: 13, color: "#666666", marginBottom: 12 }}>{userEmail}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
-            <View style={{ backgroundColor: userRole === "athlete" ? "#1D4ED8" : "#065F46", paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999 }}>
+            <View style={{ backgroundColor: "#000000", paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999 }}>
               <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: "600", textTransform: "capitalize" }}>{userRole}</Text>
             </View>
             {userRole === "athlete" && (
@@ -198,8 +198,8 @@ export default function ProfilePage() {
               </View>
             )}
             {profile?.sport && (
-              <View style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999 }}>
-                <Text style={{ color: "#1D4ED8", fontSize: 12, fontWeight: "600" }}>{profile.sport}</Text>
+              <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999 }}>
+                <Text style={{ color: "#333333", fontSize: 12, fontWeight: "600" }}>{profile.sport}</Text>
               </View>
             )}
             {profile?.division_level && (
@@ -287,8 +287,8 @@ export default function ProfilePage() {
                   <Text style={{ fontSize: 13, color: "#666666", marginBottom: 8 }}>Recruiting Positions</Text>
                   <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
                     {recruitingPositions.map((pos) => (
-                      <View key={pos} style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 }}>
-                        <Text style={{ color: "#1D4ED8", fontSize: 12, fontWeight: "600" }}>{pos}</Text>
+                      <View key={pos} style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 }}>
+                        <Text style={{ color: "#333333", fontSize: 12, fontWeight: "600" }}>{pos}</Text>
                       </View>
                     ))}
                   </View>

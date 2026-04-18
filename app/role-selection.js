@@ -56,7 +56,7 @@ export default function RoleSelection() {
             style={{ backgroundColor: "#000000", padding: 24, borderRadius: 12, opacity: loading ? 0.5 : 1 }}
           >
             <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFFFFF", marginBottom: 8 }}>Athlete</Text>
-            <Text style={{ fontSize: 14, color: "#DBEAFE", lineHeight: 20 }}>
+            <Text style={{ fontSize: 14, color: "#CCCCCC", lineHeight: 20 }}>
               I'm in the transfer portal and want to get verified so coaches can find me
             </Text>
           </TouchableOpacity>

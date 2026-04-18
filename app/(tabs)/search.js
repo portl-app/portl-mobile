@@ -1,6 +1,6 @@
 import { useAuth } from "@/utils/auth/useAuth";
 import { StatusBar } from "expo-status-bar";
-import { Filter, Search as SearchIcon, X } from "lucide-react-native";
+import { Filter, Heart, Search as SearchIcon, X } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -212,6 +212,7 @@ export default function SearchPage() {
   const [results, setResults] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [emailTarget, setEmailTarget] = useState(null); // { email, name, templates }
+  const [savedIds, setSavedIds] = useState(new Set());
   const { auth } = useAuth();
 
   const [athleteFilters, setAthleteFilters] = useState({
@@ -247,6 +248,14 @@ export default function SearchPage() {
       if (profileRes.ok) {
         const { profile } = await profileRes.json();
         setOwnProfile(profile);
+      }
+
+      if (user.role === "coach") {
+        const favRes = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/coaches/favorites`, { headers });
+        if (favRes.ok) {
+          const { athletes } = await favRes.json();
+          setSavedIds(new Set((athletes || []).map((a) => a.id)));
+        }
       }
     } catch (err) {
       console.error("Error fetching user role:", err);
@@ -285,6 +294,26 @@ export default function SearchPage() {
 
   const updateAthleteFilter = (key, value) => setAthleteFilters((prev) => ({ ...prev, [key]: value }));
   const updateCoachFilter = (key, value) => setCoachFilters((prev) => ({ ...prev, [key]: value }));
+
+  const toggleFavorite = async (athleteId) => {
+    const isSaved = savedIds.has(athleteId);
+    setSavedIds((prev) => {
+      const next = new Set(prev);
+      isSaved ? next.delete(athleteId) : next.add(athleteId);
+      return next;
+    });
+    try {
+      const headers = { "Content-Type": "application/json" };
+      if (auth?.jwt) headers.Authorization = `Bearer ${auth.jwt}`;
+      await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/coaches/favorites`, {
+        method: isSaved ? "DELETE" : "POST",
+        headers,
+        body: JSON.stringify({ athlete_id: athleteId }),
+      });
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+    }
+  };
 
   const handleContactAthlete = (athlete) => {
     if (!athlete.optional_contact_email) return;
@@ -424,7 +453,7 @@ export default function SearchPage() {
           <View style={{ gap: 10 }}>
             {results.map((item) =>
               userRole === "coach" ? (
-                <AthleteResultCard key={item.id} athlete={item} onContact={handleContactAthlete} />
+                <AthleteResultCard key={item.id} athlete={item} onContact={handleContactAthlete} isFavorited={savedIds.has(item.id)} onFavorite={() => toggleFavorite(item.id)} />
               ) : (
                 <CoachResultCard key={item.user_id} coach={item} onContact={handleContactCoach} />
               )
@@ -436,7 +465,7 @@ export default function SearchPage() {
   );
 }
 
-function AthleteResultCard({ athlete, onContact }) {
+function AthleteResultCard({ athlete, onContact, isFavorited, onFavorite }) {
   return (
     <View style={{ backgroundColor: "#F5F5F5", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#E0E0E0" }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
@@ -444,34 +473,41 @@ function AthleteResultCard({ athlete, onContact }) {
           <Text style={{ fontSize: 16, fontWeight: "bold", color: "#111111", marginBottom: 2 }}>{athlete.full_name}</Text>
           <Text style={{ fontSize: 13, color: "#666666" }}>{athlete.current_school}</Text>
         </View>
-        {athlete.years_of_eligibility && (
-          <Text style={{ fontSize: 12, color: "#666666" }}>{athlete.years_of_eligibility} yr elig.</Text>
-        )}
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          {athlete.years_of_eligibility && (
+            <Text style={{ fontSize: 12, color: "#666666" }}>{athlete.years_of_eligibility} yr elig.</Text>
+          )}
+          {onFavorite && (
+            <TouchableOpacity onPress={onFavorite} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+              <Heart size={20} color={isFavorited ? "#EF4444" : "#CCCCCC"} fill={isFavorited ? "#EF4444" : "none"} />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
         {athlete.sport && (
-          <View style={{ backgroundColor: "#1D4ED8", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+          <View style={{ backgroundColor: "#000000", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
             <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{athlete.sport}</Text>
           </View>
         )}
         {athlete.position && (
-          <View style={{ backgroundColor: "#DBEAFE", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: "#1D4ED8", fontSize: 11, fontWeight: "600" }}>{athlete.position}</Text>
+          <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{athlete.position}</Text>
           </View>
         )}
         {athlete.division_level && (
-          <View style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: "#3730A3", fontSize: 11, fontWeight: "600" }}>{athlete.division_level}</Text>
+          <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{athlete.division_level}</Text>
           </View>
         )}
         {athlete.gender && (
-          <View style={{ backgroundColor: athlete.gender === "Male" ? "#DBEAFE" : "#F5F3FF", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: athlete.gender === "Male" ? "#1D4ED8" : "#6D28D9", fontSize: 11, fontWeight: "600" }}>{athlete.gender}</Text>
+          <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{athlete.gender}</Text>
           </View>
         )}
         {athlete.stats_link && (
-          <View style={{ backgroundColor: "#065F46", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: "#6EE7B7", fontSize: 11, fontWeight: "600" }}>✓ Stats Verified</Text>
+          <View style={{ backgroundColor: "#000000", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>✓ Stats Verified</Text>
           </View>
         )}
       </View>
@@ -479,23 +515,23 @@ function AthleteResultCard({ athlete, onContact }) {
         {athlete.stats_link && (
           <TouchableOpacity
             onPress={() => Linking.openURL(athlete.stats_link)}
-            style={{ flex: 1, backgroundColor: "#065F46", padding: 10, borderRadius: 8, alignItems: "center" }}
+            style={{ flex: 1, backgroundColor: "#000000", padding: 10, borderRadius: 8, alignItems: "center" }}
           >
-            <Text style={{ color: "#6EE7B7", fontSize: 12, fontWeight: "600" }}>View Stats →</Text>
+            <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: "600" }}>View Stats →</Text>
           </TouchableOpacity>
         )}
         {athlete.school_athletics_link && (
           <TouchableOpacity
             onPress={() => Linking.openURL(athlete.school_athletics_link)}
-            style={{ flex: 1, backgroundColor: "#DBEAFE", padding: 10, borderRadius: 8, alignItems: "center" }}
+            style={{ flex: 1, backgroundColor: "#F5F5F5", padding: 10, borderRadius: 8, alignItems: "center" }}
           >
-            <Text style={{ color: "#1D4ED8", fontSize: 12, fontWeight: "600" }}>School Profile →</Text>
+            <Text style={{ color: "#333333", fontSize: 12, fontWeight: "600" }}>School Profile →</Text>
           </TouchableOpacity>
         )}
         {athlete.optional_contact_email && (
           <TouchableOpacity
             onPress={() => onContact(athlete)}
-            style={{ flex: 1, backgroundColor: "#1D4ED8", padding: 10, borderRadius: 8, alignItems: "center" }}
+            style={{ flex: 1, backgroundColor: "#000000", padding: 10, borderRadius: 8, alignItems: "center" }}
           >
             <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: "600" }}>✉ Contact</Text>
           </TouchableOpacity>
@@ -512,13 +548,13 @@ function CoachResultCard({ coach, onContact }) {
       <Text style={{ fontSize: 13, color: "#666666", marginBottom: 10 }}>{coach.school}</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
         {coach.sport && (
-          <View style={{ backgroundColor: "#065F46", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: "#6EE7B7", fontSize: 11, fontWeight: "600" }}>{coach.sport}</Text>
+          <View style={{ backgroundColor: "#000000", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{coach.sport}</Text>
           </View>
         )}
         {coach.division_level && (
-          <View style={{ backgroundColor: "#EEF2FF", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-            <Text style={{ color: "#3730A3", fontSize: 11, fontWeight: "600" }}>{coach.division_level}</Text>
+          <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
+            <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{coach.division_level}</Text>
           </View>
         )}
       </View>
