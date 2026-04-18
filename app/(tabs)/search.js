@@ -193,9 +193,9 @@ function SportPicker({ selected, onSelect, placeholder }) {
               <TouchableOpacity
                 key={sport}
                 onPress={() => { onSelect(sport); setOpen(false); }}
-                style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: "#F5F5F5", backgroundColor: selected === sport ? "#EEF2FF" : "transparent" }}
+                style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: "#F5F5F5", backgroundColor: selected === sport ? "#F5F5F5" : "transparent" }}
               >
-                <Text style={{ color: selected === sport ? "#3730A3" : "#111111", fontSize: 14 }}>{sport}</Text>
+                <Text style={{ color: selected === sport ? "#000000" : "#111111", fontSize: 14 }}>{sport}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>

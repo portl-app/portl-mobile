@@ -162,10 +162,10 @@ export default function NotificationsPage() {
               <TouchableOpacity
                 key={notification.id}
                 onPress={() => { if (!notification.is_read) markAsRead(notification.id); }}
-                style={{ backgroundColor: notification.is_read ? "#F5F5F5" : "#EFF6FF", padding: 16, borderRadius: 12, borderLeftWidth: 3, borderLeftColor: notification.is_read ? "#E0E0E0" : "#1D4ED8" }}
+                style={{ backgroundColor: notification.is_read ? "#F5F5F5" : "#FFFFFF", padding: 16, borderRadius: 12, borderLeftWidth: 3, borderLeftColor: notification.is_read ? "#E0E0E0" : "#000000" }}
               >
                 <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
-                  <View style={{ backgroundColor: notification.is_read ? "#E0E0E0" : "#1E3A8A", width: 40, height: 40, borderRadius: 20, justifyContent: "center", alignItems: "center" }}>
+                  <View style={{ backgroundColor: notification.is_read ? "#E0E0E0" : "#F5F5F5", width: 40, height: 40, borderRadius: 20, justifyContent: "center", alignItems: "center" }}>
                     {getNotificationIcon(notification.notification_type)}
                   </View>
                   <View style={{ flex: 1 }}>
