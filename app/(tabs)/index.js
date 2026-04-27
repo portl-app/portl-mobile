@@ -1,13 +1,10 @@
 import { useAuth } from "@/utils/auth/useAuth";
-import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Linking,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,13 +17,10 @@ const STATUS_COLORS = {
 };
 
 export default function HomePage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [discover, setDiscover] = useState([]);
-  const [savedCount, setSavedCount] = useState(0);
   const { auth } = useAuth();
 
   useEffect(() => {
@@ -45,21 +39,11 @@ export default function HomePage() {
       setUserEmail(user.email);
 
       if (user.role === "athlete") {
-        const [profileRes, discoverRes] = await Promise.all([
-          fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/athletes/profile`, { headers }),
-          fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/coaches/discover`, { headers }),
-        ]);
+        const profileRes = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/athletes/profile`, { headers });
         if (profileRes.ok) { const { profile } = await profileRes.json(); setProfile(profile); }
-        if (discoverRes.ok) { const data = await discoverRes.json(); setDiscover(data.coaches || []); }
       } else if (user.role === "coach") {
-        const [profileRes, discoverRes, favRes] = await Promise.all([
-          fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/coaches/profile`, { headers }),
-          fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/athletes/discover`, { headers }),
-          fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/coaches/favorites`, { headers }),
-        ]);
+        const profileRes = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/coaches/profile`, { headers });
         if (profileRes.ok) { const { profile } = await profileRes.json(); setProfile(profile); }
-        if (discoverRes.ok) { const { athletes } = await discoverRes.json(); setDiscover(athletes || []); }
-        if (favRes.ok) { const { athletes } = await favRes.json(); setSavedCount((athletes || []).length); }
       }
     } catch (err) {
       console.error("Error fetching home data:", err);
@@ -103,27 +87,24 @@ export default function HomePage() {
         </View>
 
         {userRole === "athlete" && profile && (
-          <AthleteHome profile={profile} discover={discover} router={router} />
+          <AthleteHome profile={profile} userEmail={userEmail} />
         )}
         {userRole === "coach" && profile && (
-          <CoachHome profile={profile} discover={discover} savedCount={savedCount} router={router} />
+          <CoachHome profile={profile} userEmail={userEmail} />
         )}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function AthleteHome({ profile, discover, router }) {
+function AthleteHome({ profile, userEmail }) {
   const status = profile.verification_status || "pending";
   const statusColor = STATUS_COLORS[status] || STATUS_COLORS.pending;
 
   return (
     <>
       {/* Profile card */}
-      <TouchableOpacity
-        onPress={() => router.push("/(tabs)/profile")}
-        style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 20, marginBottom: 20, borderWidth: 1, borderColor: "#E0E0E0" }}
-      >
+      <View style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: "#E0E0E0" }}>
         <Text style={{ color: "#000000", fontSize: 11, fontWeight: "700", textTransform: "uppercase", letterSpacing: 1, marginBottom: 14 }}>My Profile</Text>
         <Text style={{ color: "#111111", fontWeight: "600", fontSize: 17, marginBottom: 2 }}>{profile.full_name}</Text>
         <Text style={{ color: "#666666", fontSize: 13, marginBottom: 14 }}>{profile.current_school}</Text>
@@ -134,12 +115,12 @@ function AthleteHome({ profile, discover, router }) {
             </View>
           )}
           {profile.position && (
-            <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+            <View style={{ backgroundColor: "#E8E8E8", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
               <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{profile.position}</Text>
             </View>
           )}
           {profile.division_level && (
-            <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+            <View style={{ backgroundColor: "#E8E8E8", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
               <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{profile.division_level}</Text>
             </View>
           )}
@@ -147,69 +128,34 @@ function AthleteHome({ profile, discover, router }) {
             <Text style={{ color: statusColor.color, fontSize: 11, fontWeight: "600", textTransform: "capitalize" }}>{status}</Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
 
-      {/* Discover Coaches */}
-      {discover.length > 0 && (
-        <View>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <Text style={{ color: "#111111", fontSize: 16, fontWeight: "600" }}>Discover Coaches</Text>
-            <TouchableOpacity onPress={() => router.push("/(tabs)/search")}>
-              <Text style={{ color: "#000000", fontSize: 13 }}>View all →</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ gap: 10 }}>
-            {discover.slice(0, 5).map((coach) => (
-              <CoachCard key={coach.user_id} coach={coach} />
-            ))}
-          </View>
-        </View>
-      )}
+      {/* Coming soon */}
+      <ComingSoonBanner userEmail={userEmail} />
     </>
   );
 }
 
-function CoachCard({ coach }) {
+function ComingSoonBanner({ userEmail }) {
   return (
-    <View style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 16, borderWidth: 1, borderColor: "#E0E0E0" }}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: "#111111", fontWeight: "600", fontSize: 15, marginBottom: 2 }}>{coach.full_name}</Text>
-          <Text style={{ color: "#666666", fontSize: 13, marginBottom: 8 }}>{coach.school}</Text>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
-            {coach.sport && (
-              <View style={{ backgroundColor: "#000000", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{coach.sport}</Text>
-              </View>
-            )}
-            {coach.division_level && (
-              <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{coach.division_level}</Text>
-              </View>
-            )}
-          </View>
-        </View>
-        {coach.email && (
-          <TouchableOpacity
-            onPress={() => Linking.openURL(`mailto:${coach.email}`)}
-            style={{ backgroundColor: "#000000", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8, marginLeft: 12 }}
-          >
-            <Text style={{ color: "#FFFFFF", fontSize: 12, fontWeight: "600" }}>Contact</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+    <View style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 24, borderWidth: 1, borderColor: "#E0E0E0", alignItems: "center" }}>
+      <Text style={{ color: "#000000", fontSize: 15, fontWeight: "700", marginBottom: 8, textAlign: "center" }}>
+        Portl is launching soon
+      </Text>
+      <Text style={{ color: "#666666", fontSize: 13, textAlign: "center", lineHeight: 20 }}>
+        You will be notified at{" "}
+        <Text style={{ color: "#111111", fontWeight: "600" }}>{userEmail}</Text>
+        {" "}when you have full access.
+      </Text>
     </View>
   );
 }
 
-function CoachHome({ profile, discover, savedCount, router }) {
+function CoachHome({ profile, userEmail }) {
   return (
     <>
       {/* Profile card */}
-      <TouchableOpacity
-        onPress={() => router.push("/(tabs)/profile")}
-        style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: "#E0E0E0" }}
-      >
+      <View style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: "#E0E0E0" }}>
         <Text style={{ color: "#000000", fontSize: 11, fontWeight: "700", textTransform: "uppercase", letterSpacing: 1, marginBottom: 14 }}>My Profile</Text>
         <Text style={{ color: "#111111", fontWeight: "600", fontSize: 17, marginBottom: 2 }}>{profile.full_name}</Text>
         <Text style={{ color: "#666666", fontSize: 13, marginBottom: 14 }}>{profile.school}</Text>
@@ -219,97 +165,20 @@ function CoachHome({ profile, discover, savedCount, router }) {
               <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{profile.sport}</Text>
             </View>
           )}
-          <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+          <View style={{ backgroundColor: "#E8E8E8", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
             <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>Coach</Text>
           </View>
           {profile.division_level && (
-            <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
+            <View style={{ backgroundColor: "#E8E8E8", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999 }}>
               <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{profile.division_level}</Text>
             </View>
           )}
         </View>
-      </TouchableOpacity>
-
-      {/* Saved athletes */}
-      <TouchableOpacity
-        onPress={() => router.push("/(tabs)/search")}
-        style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 20, marginBottom: 16, flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderWidth: 1, borderColor: "#E0E0E0" }}
-      >
-        <View>
-          <Text style={{ color: "#666666", fontSize: 12, marginBottom: 4 }}>Saved Athletes</Text>
-          <Text style={{ color: "#111111", fontSize: 24, fontWeight: "bold" }}>{savedCount}</Text>
-          <Text style={{ color: "#666666", fontSize: 12 }}>athletes saved</Text>
-        </View>
-        <Text style={{ color: "#000000", fontSize: 14 }}>View →</Text>
-      </TouchableOpacity>
-
-      {/* Quick links */}
-      <View style={{ flexDirection: "row", gap: 12, marginBottom: 24 }}>
-        <TouchableOpacity
-          onPress={() => router.push("/(tabs)/search")}
-          style={{ flex: 1, backgroundColor: "#F5F5F5", borderRadius: 12, padding: 18, borderWidth: 1, borderColor: "#E0E0E0" }}
-        >
-          <Text style={{ color: "#111111", fontSize: 15, fontWeight: "600", marginBottom: 4 }}>Find Athletes</Text>
-          <Text style={{ color: "#666666", fontSize: 12 }}>Search verified athletes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => router.push("/(tabs)/profile")}
-          style={{ flex: 1, backgroundColor: "#F5F5F5", borderRadius: 12, padding: 18, borderWidth: 1, borderColor: "#E0E0E0" }}
-        >
-          <Text style={{ color: "#111111", fontSize: 15, fontWeight: "600", marginBottom: 4 }}>My Profile</Text>
-          <Text style={{ color: "#666666", fontSize: 12 }}>View your profile</Text>
-        </TouchableOpacity>
       </View>
 
-      {/* Discover Athletes */}
-      {discover.length > 0 && (
-        <View>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <Text style={{ color: "#111111", fontSize: 16, fontWeight: "600" }}>Discover Athletes</Text>
-            <TouchableOpacity onPress={() => router.push("/(tabs)/search")}>
-              <Text style={{ color: "#000000", fontSize: 13 }}>View all →</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ gap: 10 }}>
-            {discover.slice(0, 5).map((athlete) => (
-              <AthleteCard key={athlete.id} athlete={athlete} />
-            ))}
-          </View>
-        </View>
-      )}
+      {/* Coming soon */}
+      <ComingSoonBanner userEmail={userEmail} />
     </>
   );
 }
 
-function AthleteCard({ athlete }) {
-  return (
-    <View style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 16, borderWidth: 1, borderColor: "#E0E0E0" }}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: "#111111", fontWeight: "600", fontSize: 15, marginBottom: 2 }}>{athlete.full_name}</Text>
-          <Text style={{ color: "#666666", fontSize: 13, marginBottom: 8 }}>{athlete.current_school}</Text>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
-            {athlete.sport && (
-              <View style={{ backgroundColor: "#000000", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: "#FFFFFF", fontSize: 11, fontWeight: "600" }}>{athlete.sport}</Text>
-              </View>
-            )}
-            {athlete.position && (
-              <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{athlete.position}</Text>
-              </View>
-            )}
-            {athlete.gender && (
-              <View style={{ backgroundColor: "#F5F5F5", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 }}>
-                <Text style={{ color: "#333333", fontSize: 11, fontWeight: "600" }}>{athlete.gender}</Text>
-              </View>
-            )}
-          </View>
-        </View>
-        {athlete.years_of_eligibility && (
-          <Text style={{ color: "#666666", fontSize: 12 }}>{athlete.years_of_eligibility} yr elig.</Text>
-        )}
-      </View>
-    </View>
-  );
-}
