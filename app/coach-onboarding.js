@@ -69,9 +69,9 @@ function SportPicker({ selected, onSelect }) {
             <TouchableOpacity
               key={sport}
               onPress={() => { onSelect(sport); setOpen(false); }}
-              style={{ padding: 14, borderBottomWidth: 1, borderBottomColor: "#E0E0E0", backgroundColor: selected === sport ? "#EEF2FF" : "transparent" }}
+              style={{ padding: 14, borderBottomWidth: 1, borderBottomColor: "#E0E0E0", backgroundColor: selected === sport ? "#F0F0F0" : "transparent" }}
             >
-              <Text style={{ color: selected === sport ? "#3730A3" : "#111111", fontSize: 15 }}>{sport}</Text>
+              <Text style={{ color: selected === sport ? "#000000" : "#111111", fontSize: 15 }}>{sport}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -169,8 +169,8 @@ export default function CoachOnboarding() {
             <Text style={{ fontSize: 14, color: "#111111", marginBottom: 8 }}>Division Level</Text>
             <View style={{ gap: 8 }}>
               {DIVISION_LEVELS.map((level) => (
-                <TouchableOpacity key={level} onPress={() => updateField("division_level", formData.division_level === level ? "" : level)} style={{ backgroundColor: formData.division_level === level ? "#EEF2FF" : "#F5F5F5", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: formData.division_level === level ? "#000000" : "#E0E0E0" }}>
-                  <Text style={{ color: formData.division_level === level ? "#3730A3" : "#111111", fontSize: 15, fontWeight: formData.division_level === level ? "700" : "400" }}>{level}</Text>
+                <TouchableOpacity key={level} onPress={() => updateField("division_level", formData.division_level === level ? "" : level)} style={{ backgroundColor: formData.division_level === level ? "#F0F0F0" : "#F5F5F5", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: formData.division_level === level ? "#000000" : "#E0E0E0" }}>
+                  <Text style={{ color: formData.division_level === level ? "#000000" : "#111111", fontSize: 15, fontWeight: formData.division_level === level ? "700" : "400" }}>{level}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -186,9 +186,9 @@ export default function CoachOnboarding() {
                     <TouchableOpacity
                       key={pos}
                       onPress={() => togglePosition(pos)}
-                      style={{ backgroundColor: selected ? "#EEF2FF" : "#F5F5F5", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, borderWidth: 1, borderColor: selected ? "#000000" : "#E0E0E0" }}
+                      style={{ backgroundColor: selected ? "#F0F0F0" : "#F5F5F5", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, borderWidth: 1, borderColor: selected ? "#000000" : "#E0E0E0" }}
                     >
-                      <Text style={{ color: selected ? "#3730A3" : "#666666", fontSize: 13, fontWeight: selected ? "700" : "400" }}>{pos}</Text>
+                      <Text style={{ color: selected ? "#000000" : "#666666", fontSize: 13, fontWeight: selected ? "700" : "400" }}>{pos}</Text>
                     </TouchableOpacity>
                   );
                 })}

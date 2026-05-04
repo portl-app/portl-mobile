@@ -154,9 +154,9 @@ function Dropdown({ label, value, options, onSelect, placeholder }) {
               <TouchableOpacity
                 key={opt}
                 onPress={() => { onSelect(opt); setOpen(false); }}
-                style={{ padding: 14, borderBottomWidth: 1, borderBottomColor: "#E0E0E0", backgroundColor: value === opt ? "#EEF2FF" : "transparent" }}
+                style={{ padding: 14, borderBottomWidth: 1, borderBottomColor: "#E0E0E0", backgroundColor: value === opt ? "#F0F0F0" : "transparent" }}
               >
-                <Text style={{ color: value === opt ? "#3730A3" : "#111111", fontSize: 15 }}>{opt}</Text>
+                <Text style={{ color: value === opt ? "#000000" : "#111111", fontSize: 15 }}>{opt}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -229,7 +229,7 @@ export default function AthleteOnboarding() {
       setStep(3);
     } else if (step === 3) {
       if (!document) { setError("Please upload a verification document"); return; }
-      if (!attestationAccepted) { setError("You must confirm you are in the transfer portal"); return; }
+      if (!attestationAccepted) { setError("You must confirm you are pursuing a college transfer"); return; }
 
       setLoading(true);
       try {
@@ -460,9 +460,9 @@ export default function AthleteOnboarding() {
                   <TouchableOpacity
                     key={level}
                     onPress={() => updateField("division_level", level)}
-                    style={{ backgroundColor: formData.division_level === level ? "#EEF2FF" : "#F5F5F5", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: formData.division_level === level ? "#000000" : "#E0E0E0" }}
+                    style={{ backgroundColor: formData.division_level === level ? "#F0F0F0" : "#F5F5F5", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: formData.division_level === level ? "#000000" : "#E0E0E0" }}
                   >
-                    <Text style={{ color: formData.division_level === level ? "#3730A3" : "#111111", fontSize: 15, fontWeight: formData.division_level === level ? "700" : "400" }}>{level}</Text>
+                    <Text style={{ color: formData.division_level === level ? "#000000" : "#111111", fontSize: 15, fontWeight: formData.division_level === level ? "700" : "400" }}>{level}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -610,10 +610,10 @@ export default function AthleteOnboarding() {
               </View>
             </View>
 
-            <Text style={[SECTION_TITLE, { marginTop: 8 }]}>Transfer Portal Verification</Text>
+            <Text style={[SECTION_TITLE, { marginTop: 8 }]}>College Transfer Verification</Text>
             <View style={{ backgroundColor: "#1C1708", padding: 14, borderRadius: 8, borderWidth: 1, borderColor: "#78350F" }}>
               <Text style={{ fontSize: 13, color: "#FCD34D", lineHeight: 20 }}>
-                Upload proof that you are currently in the NCAA transfer portal (PDF, JPG, or PNG)
+                Upload proof that you are currently pursuing a college transfer (PDF, JPG, or PNG)
               </Text>
             </View>
 
@@ -637,7 +637,7 @@ export default function AthleteOnboarding() {
                 {attestationAccepted && <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "bold" }}>✓</Text>}
               </View>
               <Text style={{ flex: 1, fontSize: 14, color: "#111111", lineHeight: 22 }}>
-                I confirm that I am currently in the NCAA transfer portal
+                I confirm that I am currently pursuing a college transfer
               </Text>
             </TouchableOpacity>
           </View>

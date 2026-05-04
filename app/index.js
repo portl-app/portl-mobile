@@ -89,7 +89,7 @@ export default function Index() {
 
         <View style={{ backgroundColor: "#F5F5F5", padding: 20, borderRadius: 12, marginBottom: 24 }}>
           <Text style={{ fontSize: 16, color: "#111111", lineHeight: 24, textAlign: "center" }}>
-            Connect verified transfer portal athletes with college coaches
+            Connect verified college transfer athletes with college coaches
           </Text>
         </View>
 

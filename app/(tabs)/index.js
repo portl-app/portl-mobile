@@ -1,10 +1,12 @@
 import { useAuth } from "@/utils/auth/useAuth";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   ScrollView,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,6 +24,7 @@ export default function HomePage() {
   const [userEmail, setUserEmail] = useState(null);
   const [profile, setProfile] = useState(null);
   const { auth } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     fetchData();
@@ -64,6 +67,7 @@ export default function HomePage() {
   }
 
   const firstName = profile?.full_name?.split(" ")[0] || "there";
+  const editPath = userRole === "athlete" ? "/athlete-onboarding" : "/coach-onboarding";
 
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -92,6 +96,14 @@ export default function HomePage() {
         {userRole === "coach" && profile && (
           <CoachHome profile={profile} userEmail={userEmail} />
         )}
+
+        {/* Edit Profile button */}
+        <TouchableOpacity
+          onPress={() => router.push(editPath)}
+          style={{ backgroundColor: "#000000", borderRadius: 10, padding: 14, alignItems: "center", marginTop: 8 }}
+        >
+          <Text style={{ color: "#FFFFFF", fontSize: 15, fontWeight: "700" }}>Edit Profile</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -138,9 +150,9 @@ function AthleteHome({ profile, userEmail }) {
 
 function ComingSoonBanner({ userEmail }) {
   return (
-    <View style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 24, borderWidth: 1, borderColor: "#E0E0E0", alignItems: "center" }}>
+    <View style={{ backgroundColor: "#F5F5F5", borderRadius: 12, padding: 24, borderWidth: 1, borderColor: "#E0E0E0", alignItems: "center", marginBottom: 16 }}>
       <Text style={{ color: "#000000", fontSize: 15, fontWeight: "700", marginBottom: 8, textAlign: "center" }}>
-        Portl is launching soon
+        Portl is launching soon.
       </Text>
       <Text style={{ color: "#666666", fontSize: 13, textAlign: "center", lineHeight: 20 }}>
         You will be notified at{" "}
@@ -181,4 +193,3 @@ function CoachHome({ profile, userEmail }) {
     </>
   );
 }
-
